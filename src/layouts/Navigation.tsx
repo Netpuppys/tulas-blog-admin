@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/sheet";
 import { FaAngleDoubleRight } from "react-icons/fa";
 import { Link, useLocation } from "react-router-dom";
+import { TbCategory } from "react-icons/tb";
 
 const Navigation = () => {
   const location = useLocation().pathname;
@@ -63,11 +64,21 @@ const Navigation = () => {
                 </div>
               </Link>
             </SheetClose>
+            <SheetClose asChild>
+              <Link to={"/dashboard/categories"}>
+                <div
+                  className={`${
+                    location === "/dashboard/categories"
+                      ? "bg-gray-200 border-r-[3px] border-[#18181B]"
+                      : ""
+                  } mt-4 flex items-center gap-3 cursor-pointer py-3 px-4 rounded-l-md`}
+                >
+                  <TbCategory className="text-xl md:text-2xl" />
+                  <h1 className="text-lg md:text-xl font-medium">Categories</h1>
+                </div>
+              </Link>
+            </SheetClose>
             {/* <div className="mt-4 md:mt-6 flex items-center gap-3 cursor-pointer">
-              <TbCategory className="text-xl md:text-2xl" />
-              <h1 className="text-lg md:text-xl font-medium">Categories</h1>
-            </div>
-            <div className="mt-4 md:mt-6 flex items-center gap-3 cursor-pointer">
               <FaTags className="text-lg md:text-xl" />
               <h1 className="text-lg md:text-xl font-medium">Tags</h1>
             </div> */}
