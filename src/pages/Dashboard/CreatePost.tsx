@@ -7,12 +7,17 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-import { useState } from "react";
+import { ChangeEvent, useState } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 
 const CreatePost = () => {
   const [editorValue, setEditorValue] = useState("");
+
+  const [selectedImage, setSelectedImage] = useState<unknown | null>(null);
+  const [imgUrl, setImgUrl] = useState<string | null>(null);
+
+  console.log(selectedImage);
 
   const modules = {
     toolbar: [
@@ -41,18 +46,45 @@ const CreatePost = () => {
     "align",
   ];
 
+  const handleImageChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      setSelectedImage(file);
+      const imageUrl = URL.createObjectURL(file);
+      setImgUrl(imageUrl);
+    }
+  };
+
   return (
     <div>
-      <h1 className="text-3xl font-semibold">Create New Post</h1>
+      <div className="flex items-center justify-between">
+        <h1 className="text-3xl font-semibold">Create New Post</h1>
+        <Button variant={`default`}>Create</Button>
+      </div>
       <div className="mt-10 flex gap-5">
         <div className="flex-[70%]">
-          <div className="h-72 flex items-center justify-center bg-gray-100 border-2 border-gray-200 rounded-md">
-            <h1 className="text-2xl font-medium text-gray-500">Blog Banner</h1>
+          <div
+            className={`${
+              selectedImage ? "h-72" : "h-72"
+            } relative flex items-center justify-center bg-gray-100 border-2 border-gray-200 rounded-md`}
+          >
+            {selectedImage ? (
+              <div>
+                <img
+                  src={imgUrl || ""}
+                  alt="Selected"
+                  className="h-72 w-full object-cover"
+                />
+              </div>
+            ) : (
+              <h1 className="text-2xl font-medium text-gray-500">
+                Blog Banner
+              </h1>
+            )}
             <input
-              className="absolute opacity-0 cursor-pointer"
+              className="absolute inset-0 opacity-0 cursor-pointer"
               type="file"
-              name=""
-              id=""
+              onChange={handleImageChange}
             />
           </div>
           <div>
