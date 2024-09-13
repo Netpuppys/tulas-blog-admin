@@ -13,7 +13,6 @@ const AllPosts = () => {
           <h1 className="px-3 py-2 border-b-[3px] border-gray-900">Posts</h1>
         </Link>
         <h1 className="px-3 py-2">Categories</h1>
-        <h1 className="px-3 py-2">Tags</h1>
       </div>
 
       <div>
