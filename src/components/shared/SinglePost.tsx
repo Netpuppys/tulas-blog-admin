@@ -14,6 +14,8 @@ const SinglePost = () => {
             <p>
               Published on August 5, 2024 by <strong>Admin</strong>
             </p>
+          
+          
           </header>
         </div>
         <div>
