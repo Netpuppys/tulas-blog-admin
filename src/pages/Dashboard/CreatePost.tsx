@@ -58,11 +58,11 @@ const CreatePost = () => {
   return (
     <div>
       <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-semibold">Create New Post</h1>
+        <h1 className="text-xl md:text-3xl font-semibold">Create New Post</h1>
         <Button variant={`default`}>Create</Button>
       </div>
-      <div className="mt-10 flex gap-5">
-        <div className="flex-[70%]">
+      <div className="mt-10 flex flex-col md:flex-row gap-5">
+        <div className="md:flex-[70%]">
           <div
             className={`${
               selectedImage ? "h-72" : "h-72"
@@ -73,7 +73,7 @@ const CreatePost = () => {
                 <img
                   src={imgUrl || ""}
                   alt="Selected"
-                  className="h-72 w-full object-cover"
+                  className="h-44 md:h-72 w-full object-cover"
                 />
               </div>
             ) : (
@@ -89,7 +89,7 @@ const CreatePost = () => {
           </div>
           <div>
             <input
-              className="mt-5 px-4 py-4 w-full text-xl bg-gray-100 border-b-2 border-gray-200 rounded-md outline-none"
+              className="mt-5 px-3 md:px-4 py-3 md:py-4 w-full text-base md:text-xl bg-gray-100 border-b-2 border-gray-200 rounded-md outline-none"
               type="text"
               placeholder="Enter Blog Title"
             />
@@ -105,8 +105,8 @@ const CreatePost = () => {
             />
           </div>
         </div>
-        <div className="flex-[30%]">
-          <div className="py-6 px-5 border-2 border-gray-300 rounded-sm">
+        <div className="md:flex-[30%]">
+          <div className="py-6 px-3 md:px-5 border-2 border-gray-300 rounded-sm">
             <h1 className="mb-3 text-lg font-medium">Category</h1>
             <div className="w-full">
               <Select>
@@ -125,11 +125,11 @@ const CreatePost = () => {
               </Select>
             </div>
           </div>
-          <div className="mt-3 py-6 px-5 border-2 border-gray-300 rounded-sm">
+          <div className="mt-3 py-6 px-3 md:px-5 border-2 border-gray-300 rounded-sm">
             <h1 className="mb-3 text-lg font-medium">Tags</h1>
             <div className="flex gap-2">
               <input
-                className="px-4 py-2 w-full text-base bg-gray-100 border-b-2 border-gray-200 rounded-md outline-none"
+                className="px-3 md:px-4 py-2 w-full text-sm md:text-base bg-gray-100 border-b-2 border-gray-200 rounded-md outline-none"
                 type="text"
                 placeholder="Enter Tags"
               />
@@ -139,27 +139,27 @@ const CreatePost = () => {
               *Separate tags with commas.
             </p>
           </div>
-          <div className="mt-3 py-6 px-5 border-2 border-gray-300 rounded-sm">
+          <div className="mt-3 py-6 px-3 md:px-5 border-2 border-gray-300 rounded-sm">
             <h1 className="mb-3 text-lg font-medium">Short Description</h1>
 
             <textarea
-              className="px-4 py-3 h-32 w-full text-base bg-gray-100 border-b-2 border-gray-200 rounded-md resize-none outline-none"
+              className="px-3 md:px-4 py-3 h-32 w-full text-sm md:text-base bg-gray-100 border-b-2 border-gray-200 rounded-md resize-none outline-none"
               placeholder="Enter Short Description"
             />
           </div>
-          <div className="mt-3 py-6 px-5 border-2 border-gray-300 rounded-sm">
+          <div className="mt-3 py-6 px-3 md:px-5 border-2 border-gray-300 rounded-sm">
             <h1 className="mb-3 text-lg font-medium">Meta Description</h1>
 
             <textarea
-              className="px-4 py-3 h-32 w-full text-base bg-gray-100 border-b-2 border-gray-200 rounded-md resize-none outline-none"
+              className="px-3 md:px-4 py-3 h-32 w-full text-sm md:text-base bg-gray-100 border-b-2 border-gray-200 rounded-md resize-none outline-none"
               placeholder="Enter Meta Description"
             />
           </div>
-          <div className="mt-3 py-6 px-5 border-2 border-gray-300 rounded-sm">
+          <div className="mt-3 py-6 px-3 md:px-5 border-2 border-gray-300 rounded-sm">
             <h1 className="mb-3 text-lg font-medium">Author Name</h1>
 
             <input
-              className="px-4 py-2 w-full text-base bg-gray-100 border-b-2 border-gray-200 rounded-md resize-none outline-none"
+              className="px-3 md:px-4 py-2 w-full text-sm md:text-base bg-gray-100 border-b-2 border-gray-200 rounded-md resize-none outline-none"
               type="text"
               placeholder="Enter Author Name"
             />

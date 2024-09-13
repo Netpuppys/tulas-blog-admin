@@ -19,11 +19,11 @@ const Categories = () => {
       <div>
         <h1 className="text-3xl font-semibold">Categories</h1>
       </div>
-      <div className="w-1/2 mt-10 py-6 px-5 border-2 border-gray-300 rounded-sm">
+      <div className="md:w-1/2 mt-10 py-6 px-5 border-2 border-gray-300 rounded-sm">
         <h1 className="mb-3 text-lg font-medium">Create Category</h1>
         <div className="flex gap-2">
           <input
-            className="px-4 py-2 w-full text-base bg-gray-100 border-b-2 border-gray-200 rounded-md outline-none"
+            className="px-3 md:px-4 py-2 w-full text-sm md:text-base bg-gray-100 border-b-2 border-gray-200 rounded-md outline-none"
             type="text"
             placeholder="Enter Category Name"
           />
@@ -46,7 +46,7 @@ const Categories = () => {
               <TableRow key={i}>
                 <TableCell className="font-medium">Lorem, ipsum.</TableCell>
                 <TableCell>9</TableCell>
-                <TableCell className="flex justify-end items-center gap-5">
+                <TableCell className="flex justify-end items-center gap-3 md:gap-4">
                   <Edit />
                   <Delete className="h-7 w-7 text-red-600" />
                 </TableCell>
