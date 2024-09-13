@@ -1,3 +1,4 @@
+import SinglePost from "@/components/shared/SinglePost";
 import DashboardLayout from "@/layouts/DashboardLayout";
 import Login from "@/pages/Auth/Login";
 import AllPosts from "@/pages/Dashboard/AllPosts";
@@ -22,6 +23,7 @@ export default function Routes() {
         <Route path="/dashboard" element={<DashboardLayout />}>
           <Route path="home" element={<Home />} />
           <Route path="all-posts" element={<AllPosts />} />
+          <Route path="posts/1" element={<SinglePost />} />
         </Route>
       </>
     )

@@ -1,4 +1,5 @@
 import { FaRegClock } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
 const DisplayPost = () => {
   return (
@@ -11,9 +12,11 @@ const DisplayPost = () => {
             <h1 className="text-base md:text-lg">5th August 2024</h1>
           </div>
         </div>
+        <Link to={`/dashboard/posts/1`}>
         <h1 className="text-xl md:text-3xl font-semibold hover:underline cursor-pointer">
           Lorem ipsum dolor sit amet consectetur adipisicing elit.
         </h1>
+        </Link>
         <h1 className="mt-2 text-sm md:text-lg font-normal">
           Lorem ipsum dolor sit amet.
         </h1>
