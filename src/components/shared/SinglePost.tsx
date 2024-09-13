@@ -1,8 +1,10 @@
 import data from "@/utils/data.json";
+import ScrollToTop from "@/utils/ScrollToTop";
 
 const SinglePost = () => {
   return (
     <div>
+      <ScrollToTop />
       <div className="max-w-[700px] mx-auto">
         <div className="prose prose-red lg:prose-xl ">
           <header>

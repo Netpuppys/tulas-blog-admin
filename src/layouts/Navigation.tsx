@@ -1,14 +1,13 @@
-import { FaPenNib, FaTags } from "react-icons/fa";
+import { FaPenNib } from "react-icons/fa";
 import { RiAlignItemLeftLine } from "react-icons/ri";
-import { TbCategory } from "react-icons/tb";
 
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
+  SheetClose,
   SheetContent,
   SheetHeader,
   SheetTrigger,
-  SheetClose,
 } from "@/components/ui/sheet";
 import { FaAngleDoubleRight } from "react-icons/fa";
 import { Link } from "react-router-dom";
@@ -45,14 +44,14 @@ const Navigation = () => {
                 Create New Post
               </h1>
             </div>
-            <div className="mt-4 md:mt-6 flex items-center gap-3 cursor-pointer">
+            {/* <div className="mt-4 md:mt-6 flex items-center gap-3 cursor-pointer">
               <TbCategory className="text-xl md:text-2xl" />
               <h1 className="text-lg md:text-xl font-medium">Categories</h1>
             </div>
             <div className="mt-4 md:mt-6 flex items-center gap-3 cursor-pointer">
               <FaTags className="text-lg md:text-xl" />
               <h1 className="text-lg md:text-xl font-medium">Tags</h1>
-            </div>
+            </div> */}
           </div>
         </SheetHeader>
       </SheetContent>
