@@ -10,9 +10,11 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { FaAngleDoubleRight } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 const Navigation = () => {
+  const location = useLocation().pathname;
+
   return (
     <Sheet>
       <div className="py-3 px-5 md:px-10 flex justify-between items-center border-b-2 border-gray-200">
@@ -29,21 +31,38 @@ const Navigation = () => {
 
       <SheetContent side={"left"}>
         <SheetHeader>
-          <div className="pt-5 pl-1 md:pl-2">
+          <div className="pt-5">
             <SheetClose asChild>
               <Link to="/dashboard/all-posts">
-                <div className="mt-4 flex items-center gap-3 cursor-pointer">
+                <div
+                  className={`${
+                    location === "/dashboard/all-posts"
+                      ? "bg-gray-200 border-r-[3px] border-[#18181B]"
+                      : ""
+                  } mt-4 flex items-center gap-3 cursor-pointer py-3 px-4 rounded-l-md`}
+                >
                   <RiAlignItemLeftLine className="text-xl md:text-2xl" />
                   <h1 className="text-lg md:text-xl font-medium">All Posts</h1>
                 </div>
               </Link>
             </SheetClose>
-            <div className="mt-4 md:mt-6 flex items-center gap-3 cursor-pointer">
-              <FaPenNib className="text-lg md:text-xl" />
-              <h1 className="text-lg md:text-xl font-medium">
-                Create New Post
-              </h1>
-            </div>
+
+            <SheetClose asChild>
+              <Link to={"/dashboard/create-post"}>
+                <div
+                  className={`${
+                    location === "/dashboard/create-post"
+                      ? "bg-gray-200 border-r-[3px] border-[#18181B]"
+                      : ""
+                  } mt-4 flex items-center gap-3 cursor-pointer py-3 px-4 rounded-l-md`}
+                >
+                  <FaPenNib className="text-lg md:text-xl" />
+                  <h1 className="text-lg md:text-xl font-medium">
+                    Create New Post
+                  </h1>
+                </div>
+              </Link>
+            </SheetClose>
             {/* <div className="mt-4 md:mt-6 flex items-center gap-3 cursor-pointer">
               <TbCategory className="text-xl md:text-2xl" />
               <h1 className="text-lg md:text-xl font-medium">Categories</h1>

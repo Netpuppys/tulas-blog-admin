@@ -2,6 +2,7 @@ import SinglePost from "@/components/shared/SinglePost";
 import DashboardLayout from "@/layouts/DashboardLayout";
 import Login from "@/pages/Auth/Login";
 import AllPosts from "@/pages/Dashboard/AllPosts";
+import CreatePost from "@/pages/Dashboard/CreatePost";
 import Home from "@/pages/Dashboard/Home";
 import {
   createBrowserRouter,
@@ -24,6 +25,7 @@ export default function Routes() {
           <Route path="home" element={<Home />} />
           <Route path="all-posts" element={<AllPosts />} />
           <Route path="posts/1" element={<SinglePost />} />
+          <Route path="create-post" element={<CreatePost />} />
         </Route>
       </>
     )
