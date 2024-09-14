@@ -12,7 +12,7 @@ import {
 import { FaAngleDoubleRight } from "react-icons/fa";
 import { Link, useLocation } from "react-router-dom";
 import { TbCategory } from "react-icons/tb";
-import { Home } from "lucide-react";
+import { Home, Lock } from "lucide-react";
 
 const Navigation = () => {
   const location = useLocation().pathname;
@@ -93,10 +93,22 @@ const Navigation = () => {
                 </div>
               </Link>
             </SheetClose>
-            {/* <div className="mt-4 md:mt-6 flex items-center gap-3 cursor-pointer">
-              <FaTags className="text-lg md:text-xl" />
-              <h1 className="text-lg md:text-xl font-medium">Tags</h1>
-            </div> */}
+            <SheetClose asChild>
+              <Link to={"/dashboard/change-password"}>
+                <div
+                  className={`${
+                    location === "/dashboard/change-password"
+                      ? "bg-gray-200 border-r-[3px] border-[#18181B]"
+                      : ""
+                  } mt-4 flex items-center gap-3 cursor-pointer py-3 px-4 rounded-l-md`}
+                >
+                  <Lock className="text-xl md:text-2xl" />
+                  <h1 className="text-lg md:text-xl font-medium">
+                    Change Password
+                  </h1>
+                </div>
+              </Link>
+            </SheetClose>
           </div>
         </SheetHeader>
       </SheetContent>

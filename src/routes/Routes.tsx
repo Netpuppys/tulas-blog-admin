@@ -1,5 +1,6 @@
 import SinglePost from "@/components/shared/SinglePost";
 import DashboardLayout from "@/layouts/DashboardLayout";
+import ChangePassword from "@/pages/Auth/ChangePassword";
 import Login from "@/pages/Auth/Login";
 import AllPosts from "@/pages/Dashboard/AllPosts";
 import Categories from "@/pages/Dashboard/Categories";
@@ -30,6 +31,7 @@ export default function Routes() {
           <Route path="create-post" element={<CreatePost />} />
           <Route path="categories" element={<Categories />} />
           <Route path="categories/:categoryId" element={<CategoryPosts />} />
+          <Route path="change-password" element={<ChangePassword />} />
         </Route>
       </>
     )
