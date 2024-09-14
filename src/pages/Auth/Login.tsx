@@ -2,8 +2,11 @@ import { Button } from "@/components/ui/button";
 import ScrollToTop from "@/utils/ScrollToTop";
 import { IoMail } from "react-icons/io5";
 import { MdKey } from "react-icons/md";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
+  const navigate = useNavigate();
+
   return (
     <div className="min-h-screen grid grid-cols-1 md:grid-cols-2">
       <ScrollToTop />
@@ -36,7 +39,7 @@ const Login = () => {
               />
             </div>
             <div className="text-center">
-              <Button>Login</Button>
+              <Button onClick={() => navigate("/dashboard/home")}>Login</Button>
             </div>
           </div>
         </div>

@@ -9,15 +9,28 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Delete, Edit } from "lucide-react";
+import ScrollToTop from "@/utils/ScrollToTop";
+import { Edit, Trash2 } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const Categories = () => {
   const data = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
   return (
     <div>
+      <ScrollToTop />
+      <div className="flex items-center gap-5 border-b-2">
+        <Link to={"/dashboard/all-posts"}>
+          <h1 className="px-3 py-2">Posts</h1>
+        </Link>
+        <Link to={"/dashboard/categories"}>
+          <h1 className="px-3 py-2 border-b-[3px] border-gray-900">
+            Categories
+          </h1>
+        </Link>
+      </div>
       <div>
-        <h1 className="text-3xl font-semibold">Categories</h1>
+        <h1 className="mt-10 text-3xl font-semibold">Categories</h1>
       </div>
       <div className="md:w-1/2 mt-10 py-6 px-5 border-2 border-gray-300 rounded-sm">
         <h1 className="mb-3 text-lg font-medium">Create Category</h1>
@@ -44,11 +57,13 @@ const Categories = () => {
           <TableBody>
             {data.map((_category, i) => (
               <TableRow key={i}>
+                <Link to={"/dashboard/categories/1"}>
                 <TableCell className="font-medium">Lorem, ipsum.</TableCell>
+                </Link>
                 <TableCell>9</TableCell>
                 <TableCell className="flex justify-end items-center gap-3 md:gap-4">
                   <Edit />
-                  <Delete className="h-7 w-7 text-red-600" />
+                  <Trash2 className="h-7 w-7 text-red-600" />
                 </TableCell>
               </TableRow>
             ))}

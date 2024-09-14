@@ -3,6 +3,7 @@ import DashboardLayout from "@/layouts/DashboardLayout";
 import Login from "@/pages/Auth/Login";
 import AllPosts from "@/pages/Dashboard/AllPosts";
 import Categories from "@/pages/Dashboard/Categories";
+import CategoryPosts from "@/pages/Dashboard/CategoryPosts";
 import CreatePost from "@/pages/Dashboard/CreatePost";
 import Home from "@/pages/Dashboard/Home";
 import {
@@ -28,6 +29,7 @@ export default function Routes() {
           <Route path="posts/1" element={<SinglePost />} />
           <Route path="create-post" element={<CreatePost />} />
           <Route path="categories" element={<Categories />} />
+          <Route path="categories/:categoryId" element={<CategoryPosts />} />
         </Route>
       </>
     )
