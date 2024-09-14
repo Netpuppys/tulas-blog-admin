@@ -164,6 +164,14 @@ const CreatePost = () => {
               placeholder="Enter Author Name"
             />
           </div>
+          <div className="mt-3 py-6 px-3 md:px-5 border-2 border-gray-300 rounded-sm">
+            <h1 className="mb-3 text-lg font-medium">Slug Name</h1>
+            <input
+              className="px-3 md:px-4 py-2 w-full text-sm md:text-base bg-gray-100 border-b-2 border-gray-200 rounded-md resize-none outline-none"
+              type="text"
+              placeholder="Enter Slug Name"
+            />
+          </div>
         </div>
       </div>
     </div>
