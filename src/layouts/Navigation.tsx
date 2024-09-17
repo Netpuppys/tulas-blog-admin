@@ -17,6 +17,11 @@ import { Home, Lock } from "lucide-react";
 const Navigation = () => {
   const location = useLocation().pathname;
 
+  const handleLogout = () => {
+    localStorage.removeItem("crm_blog_token");
+    window.location.href = "/";
+  };
+
   return (
     <Sheet>
       <div className="py-3 px-5 md:px-10 flex justify-between items-center border-b-2 border-gray-200">
@@ -27,7 +32,9 @@ const Navigation = () => {
           <div className="text-xl md:text-2xl font-bold">Dashboard</div>
         </div>
         <div>
-          <Button variant="destructive">Logout</Button>
+          <Button onClick={handleLogout} variant="destructive">
+            Logout
+          </Button>
         </div>
       </div>
 
