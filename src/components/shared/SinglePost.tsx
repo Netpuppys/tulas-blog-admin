@@ -1,5 +1,6 @@
 import data from "@/utils/data.json";
 import ScrollToTop from "@/utils/ScrollToTop";
+import { Edit, Trash2 } from "lucide-react";
 
 const SinglePost = () => {
   return (
@@ -8,16 +9,21 @@ const SinglePost = () => {
       <div className="max-w-[700px] mx-auto">
         <div className="prose prose-red lg:prose-xl ">
           <header>
-            <h1>
+            <h1 className="!mb-3">
               Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut?
             </h1>
-            <p>
-              Published on August 5, 2024 by <strong>Admin</strong>
-            </p>
-          
-          
+            <div className="!mb-3 flex justify-between items-center">
+              <p>
+                Published on August 5, 2024 by <strong>Admin</strong>
+              </p>
+              <div className="flex items-center gap-3 md:gap-4">
+                <Edit />
+                <Trash2 className="h-7 w-7 text-red-600" />
+              </div>
+            </div>
           </header>
         </div>
+
         <div>
           <img
             src="https://picsum.photos/800/400"
