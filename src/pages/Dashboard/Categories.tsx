@@ -21,13 +21,14 @@ import { ICategoryType } from "@/types";
 import axiosInstance from "@/utils/axiosInstance";
 import ScrollToTop from "@/utils/ScrollToTop";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Edit, LoaderCircle } from "lucide-react";
+import { LoaderCircle } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 import { toast } from "sonner";
 import { z } from "zod";
 import { DeleteCategory } from "./modals/DeleteCategory";
+import { EditCategory } from "./modals/EditCategory";
 
 const FormSchema = z.object({
   name: z.string().min(1, {
@@ -121,7 +122,7 @@ const Categories = () => {
                       </FormControl>
                     </FormItem>
 
-                    <FormMessage className="mt-[-10px] text-red-500" />
+                    <FormMessage className="mt-3 text-red-500" />
                   </div>
                 )}
               />
@@ -157,7 +158,12 @@ const Categories = () => {
                     </Link>
                     <TableCell>{category?.postCount}</TableCell>
                     <TableCell className="flex justify-end items-center gap-3 md:gap-4">
-                      <Edit />
+                      <EditCategory
+                        id={category?.id}
+                        refetch={refetch}
+                        setRefetch={setRefetch}
+                        oldName={category?.name}
+                      />
                       <DeleteCategory
                         id={category?.id}
                         refetch={refetch}
