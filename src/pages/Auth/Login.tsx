@@ -26,7 +26,6 @@ const FormSchema = z.object({
 });
 
 const Login = () => {
-
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const form = useForm<z.infer<typeof FormSchema>>({
@@ -41,7 +40,7 @@ const Login = () => {
     try {
       setIsSubmitting(true);
       const res = await axiosInstance.post("/auth/login", data);
-      
+
       if (res?.data?.data?.accessToken) {
         localStorage.setItem("crm_blog_token", res?.data?.data?.accessToken);
         toast.success("User login successful");
@@ -117,7 +116,11 @@ const Login = () => {
                   )}
                 />
                 <div className="text-center">
-                  <Button disabled={isSubmitting} type="submit" variant={"default"}>
+                  <Button
+                    disabled={isSubmitting}
+                    type="submit"
+                    variant={"default"}
+                  >
                     Login
                   </Button>
                 </div>

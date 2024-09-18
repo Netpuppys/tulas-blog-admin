@@ -44,7 +44,7 @@ export function DeleteCategory({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Trash2 className="h-7 w-7 text-red-600" />
+        <Trash2 className="h-7 w-7 text-red-600 cursor-pointer" />
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px] bg-red-100">
         <DialogHeader>
