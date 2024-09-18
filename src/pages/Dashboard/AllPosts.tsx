@@ -1,4 +1,5 @@
 import DisplayPost from "@/components/shared/DisplayPost";
+import PaginationHandler from "@/helpers/PaginationHandler";
 import { IPostType } from "@/types";
 import axiosInstance from "@/utils/axiosInstance";
 import ScrollToTop from "@/utils/ScrollToTop";
@@ -10,11 +11,15 @@ import { toast } from "sonner";
 const AllPosts = () => {
   const [postData, setPostData] = useState<IPostType[] | []>();
 
+  const [totalData, setTotalData] = useState<number>(1);
+  const [page, setPage] = useState(1);
+
   useEffect(() => {
     try {
       const fetchPosts = async () => {
-        const res = await axiosInstance.get("/post");
+        const res = await axiosInstance.get(`/post?limit=10&page=${page}`);
         if (res?.data?.data) {
+          setTotalData(res.data.meta.total);
           setPostData(res?.data?.data);
         }
       };
@@ -24,7 +29,7 @@ const AllPosts = () => {
       const error = err as { response: { data: { message: string } } };
       toast.error(error?.response?.data?.message);
     }
-  }, []);
+  }, [page]);
 
   return (
     <div>
@@ -50,6 +55,13 @@ const AllPosts = () => {
               <DisplayPost post={post} />
             </div>
           ))}
+
+          <div>
+            <PaginationHandler
+              totalResults={totalData}
+              setPageNumber={setPage}
+            />
+          </div>
         </div>
       ) : (
         <h1 className="text-2xl text-center font-medium">No Posts Available</h1>
