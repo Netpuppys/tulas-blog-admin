@@ -16,6 +16,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
+import { useState } from "react";
 
 const FormSchema = z.object({
   email: z.string().email({ message: "Please enter a valid email." }),
@@ -25,6 +26,9 @@ const FormSchema = z.object({
 });
 
 const Login = () => {
+
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -35,16 +39,19 @@ const Login = () => {
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
     try {
+      setIsSubmitting(true);
       const res = await axiosInstance.post("/auth/login", data);
-
+      
       if (res?.data?.data?.accessToken) {
         localStorage.setItem("crm_blog_token", res?.data?.data?.accessToken);
         toast.success("User login successful");
         window.location.reload();
+        setIsSubmitting(false);
       }
     } catch (err: unknown) {
       const error = err as { response: { data: { message: string } } };
       toast.error(error?.response?.data?.message);
+      setIsSubmitting(false);
     }
   }
 
@@ -110,7 +117,7 @@ const Login = () => {
                   )}
                 />
                 <div className="text-center">
-                  <Button type="submit" variant={"default"}>
+                  <Button disabled={isSubmitting} type="submit" variant={"default"}>
                     Login
                   </Button>
                 </div>

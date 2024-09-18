@@ -9,12 +9,34 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { ICategoryType } from "@/types";
+import axiosInstance from "@/utils/axiosInstance";
 import ScrollToTop from "@/utils/ScrollToTop";
-import { Edit, Trash2 } from "lucide-react";
+import { Edit, LoaderCircle } from "lucide-react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { toast } from "sonner";
+import { DeleteCategory } from "./modals/DeleteCategory";
 
 const Categories = () => {
-  const data = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+  const [categoryData, setCategoryData] = useState<ICategoryType[] | []>();
+  const [refetch, setRefetch] = useState(false);
+
+  useEffect(() => {
+    try {
+      const fetchCategories = async () => {
+        const res = await axiosInstance.get("/category");
+        if (res?.data?.data) {
+          setCategoryData(res?.data?.data);
+        }
+      };
+
+      fetchCategories();
+    } catch (err: unknown) {
+      const error = err as { response: { data: { message: string } } };
+      toast.error(error?.response?.data?.message);
+    }
+  }, [refetch]);
 
   return (
     <div>
@@ -44,32 +66,46 @@ const Categories = () => {
         </div>
       </div>
 
-      <div className="mt-10">
-        <Table>
-          <TableCaption>A list of categories.</TableCaption>
-          <TableHeader>
-            <TableRow>
-              <TableHead className="w-[300px]">Name</TableHead>
-              <TableHead>Posts</TableHead>
-              <TableHead className="text-right">Actions</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {data.map((_category, i) => (
-              <TableRow key={i}>
-                <Link to={"/dashboard/categories/1"}>
-                <TableCell className="font-medium">Lorem, ipsum.</TableCell>
-                </Link>
-                <TableCell>9</TableCell>
-                <TableCell className="flex justify-end items-center gap-3 md:gap-4">
-                  <Edit />
-                  <Trash2 className="h-7 w-7 text-red-600" />
-                </TableCell>
+      {categoryData === null || categoryData === undefined ? (
+        <LoaderCircle className="mx-auto my-32 text-3xl animate-spin" />
+      ) : (
+        <div className="mt-10">
+          <Table>
+            <TableCaption>A list of categories.</TableCaption>
+            <TableHeader>
+              <TableRow>
+                <TableHead className="w-[300px]">Name</TableHead>
+                <TableHead>Posts</TableHead>
+                <TableHead className="text-right">Actions</TableHead>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </div>
+            </TableHeader>
+            {categoryData?.length > 0 ? (
+              <TableBody>
+                {categoryData.map((category: ICategoryType) => (
+                  <TableRow key={category?.id}>
+                    <Link to={"/dashboard/categories/" + category?.id}>
+                      <TableCell className="font-medium">
+                        {category?.name}
+                      </TableCell>
+                    </Link>
+                    <TableCell>{category?.postCount}</TableCell>
+                    <TableCell className="flex justify-end items-center gap-3 md:gap-4">
+                      <Edit />
+                      <DeleteCategory
+                        id={category?.id}
+                        refetch={refetch}
+                        setRefetch={setRefetch}
+                      />
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            ) : (
+              <div>No Categories found</div>
+            )}
+          </Table>
+        </div>
+      )}
     </div>
   );
 };
