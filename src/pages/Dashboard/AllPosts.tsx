@@ -1,9 +1,30 @@
 import DisplayPost from "@/components/shared/DisplayPost";
+import { IPostType } from "@/types";
+import axiosInstance from "@/utils/axiosInstance";
 import ScrollToTop from "@/utils/ScrollToTop";
+import { LoaderCircle } from "lucide-react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { toast } from "sonner";
 
 const AllPosts = () => {
-  const posts = [1, 2, 3, 4, 5];
+  const [postData, setPostData] = useState<IPostType[] | []>();
+
+  useEffect(() => {
+    try {
+      const fetchPosts = async () => {
+        const res = await axiosInstance.get("/post");
+        if (res?.data?.data) {
+          setPostData(res?.data?.data);
+        }
+      };
+
+      fetchPosts();
+    } catch (err: unknown) {
+      const error = err as { response: { data: { message: string } } };
+      toast.error(error?.response?.data?.message);
+    }
+  }, []);
 
   return (
     <div>
@@ -19,13 +40,20 @@ const AllPosts = () => {
       <div>
         <h1 className="mt-10 text-3xl font-semibold">Posts</h1>
       </div>
-      <div>
-        {posts?.map((_post, i) => (
-          <div key={i}>
-            <DisplayPost />
-          </div>
-        ))}
-      </div>
+
+      {postData === null || postData === undefined ? (
+        <LoaderCircle className="mx-auto my-32 text-3xl animate-spin" />
+      ) : postData?.length > 0 ? (
+        <div>
+          {postData?.map((post) => (
+            <div key={post?.id}>
+              <DisplayPost post={post} />
+            </div>
+          ))}
+        </div>
+      ) : (
+        <h1 className="text-2xl text-center font-medium">No Posts Available</h1>
+      )}
     </div>
   );
 };

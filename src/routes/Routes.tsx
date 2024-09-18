@@ -31,7 +31,7 @@ export default function AppContainer() {
           <Route path="/dashboard" element={<DashboardLayout />}>
             <Route path="home" element={<Home />} />
             <Route path="all-posts" element={<AllPosts />} />
-            <Route path="posts/:postId" element={<SinglePost />} />
+            <Route path="posts/:postSlug" element={<SinglePost />} />
             <Route path="create-post" element={<CreatePost />} />
             <Route path="categories" element={<Categories />} />
             <Route path="categories/:categoryId" element={<CategoryPosts />} />
