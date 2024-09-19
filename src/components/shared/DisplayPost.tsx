@@ -27,14 +27,21 @@ const DisplayPost = ({ post }: { post: IPostType }) => {
           {post?.short_description}
         </h1>
         <div className="mt-4 flex items-center gap-2">
-          {post?.tags?.map((tag, i) => (
-            <h1
-              key={i}
-              className="px-3 md:px-4 py-1 text-sm md:text-base bg-[#F0F0F0] hover:bg-[#F0F0F0]/70 cursor-pointer font-medium border-2 rounded-[30px]"
-            >
-              {tag}
+          <Link to={`/dashboard/categories/${post?.category_id}`}>
+            <h1 className="pr-3 text-sm md:text-lg font-medium border-r-2 border-black hover:underline">
+              {post?.category?.name ? post?.category?.name : "Uncategorized"}
             </h1>
-          ))}
+          </Link>
+          <div className="flex items-center gap-2">
+            {post?.tags?.map((tag, i) => (
+              <h1
+                key={i}
+                className="px-3 md:px-4 py-1 text-sm md:text-base bg-[#F0F0F0] hover:bg-[#F0F0F0]/70 cursor-pointer font-medium border-2 rounded-[30px]"
+              >
+                {tag}
+              </h1>
+            ))}
+          </div>
         </div>
       </div>
 

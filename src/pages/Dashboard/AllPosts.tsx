@@ -64,7 +64,7 @@ const AllPosts = () => {
           </div>
         </div>
       ) : (
-        <h1 className="text-2xl text-center font-medium">No Posts Available</h1>
+        <h1 className="my-36 text-2xl text-center font-medium">No Posts Available</h1>
       )}
     </div>
   );
