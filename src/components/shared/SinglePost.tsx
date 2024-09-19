@@ -5,7 +5,7 @@ import ScrollToTop from "@/utils/ScrollToTop";
 import { Edit, LoaderCircle } from "lucide-react";
 import moment from "moment";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { toast } from "sonner";
 
 const SinglePost = () => {
@@ -46,7 +46,9 @@ const SinglePost = () => {
                     <strong>{postData?.author_name}</strong>
                   </p>
                   <div className="flex items-center gap-3 md:gap-4">
-                    <Edit />
+                    <Link to={`/dashboard/posts/${postData?.slug}/edit`}>
+                      <Edit className="text-black" />
+                    </Link>
                     <DeletePost id={postData?.id} />
                   </div>
                 </div>

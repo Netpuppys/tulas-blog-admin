@@ -6,6 +6,7 @@ import AllPosts from "@/pages/Dashboard/AllPosts";
 import Categories from "@/pages/Dashboard/Categories";
 import CategoryPosts from "@/pages/Dashboard/CategoryPosts";
 import CreatePost from "@/pages/Dashboard/CreatePost";
+import EditPost from "@/pages/Dashboard/EditPost";
 import Home from "@/pages/Dashboard/Home";
 import {
   createBrowserRouter,
@@ -33,6 +34,7 @@ export default function AppContainer() {
             <Route path="all-posts" element={<AllPosts />} />
             <Route path="posts/:slug" element={<SinglePost />} />
             <Route path="create-post" element={<CreatePost />} />
+            <Route path="posts/:slug/edit" element={<EditPost />} />
             <Route path="categories" element={<Categories />} />
             <Route path="categories/:categoryId" element={<CategoryPosts />} />
             <Route path="change-password" element={<ChangePassword />} />
