@@ -23,9 +23,10 @@ const EditPost = () => {
     toolbar: [
       [{ header: [1, 2, 3, 4, 5, 6, false] }],
       ["bold", "italic", "underline", "subscript", "superscript"],
-      [{ list: "ordered" }, { list: "bullet" }],
+      [{ list: "ordered" }, { list: "bullet" }, { list: "check" }],
       [{ indent: "-1" }, { indent: "+1" }],
       [{ align: [] }],
+      ["blockquote", "code-block"],
       ["link", "image"],
       ["clean"],
     ],
@@ -41,9 +42,12 @@ const EditPost = () => {
     "list",
     "bullet",
     "indent",
+    "align",
     "link",
     "image",
-    "align",
+    "blockquote",
+    "code-block",
+    "check",
   ];
 
   const handleImageChange = (event: ChangeEvent<HTMLInputElement>) => {
