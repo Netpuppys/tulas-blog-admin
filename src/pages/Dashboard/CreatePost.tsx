@@ -17,7 +17,7 @@ const CreatePost = () => {
   const [selectedImage, setSelectedImage] = useState<unknown | null>(null);
   const [imgUrl, setImgUrl] = useState<string | null>(null);
 
-  console.log(selectedImage);
+  console.log(editorValue);
 
   const modules = {
     toolbar: [
