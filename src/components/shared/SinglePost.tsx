@@ -1,7 +1,8 @@
+import { DeletePost } from "@/pages/Dashboard/modals/DeletePost";
 import { IPostType } from "@/types";
 import axiosInstance from "@/utils/axiosInstance";
 import ScrollToTop from "@/utils/ScrollToTop";
-import { Edit, LoaderCircle, Trash2 } from "lucide-react";
+import { Edit, LoaderCircle } from "lucide-react";
 import moment from "moment";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
@@ -46,7 +47,7 @@ const SinglePost = () => {
                   </p>
                   <div className="flex items-center gap-3 md:gap-4">
                     <Edit />
-                    <Trash2 className="h-7 w-7 text-red-600" />
+                    <DeletePost id={postData?.id} />
                   </div>
                 </div>
               </header>
