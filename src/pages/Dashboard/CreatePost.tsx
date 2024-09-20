@@ -14,13 +14,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { ICategoryType } from "@/types";
 import axiosInstance from "@/utils/axiosInstance";
+import FakeLoader from "@/utils/FakeLoader";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Image } from "lucide-react";
-import React, { ChangeEvent, useRef, useState } from "react";
+import React, { ChangeEvent, useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
+import { toast } from "sonner";
 import { z } from "zod";
 
 const __ISMSIE__ = navigator.userAgent.match(/Trident/i) ? true : false;
@@ -50,11 +53,32 @@ const FormSchema = z.object({
 });
 
 const CreatePost = () => {
+  const [categoryData, setCategoryData] = useState<ICategoryType[] | []>();
+
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    try {
+      setIsLoading(true);
+      const fetchCategories = async () => {
+        const res = await axiosInstance.get("/category");
+        if (res?.data?.data) {
+          setCategoryData(res?.data?.data);
+          setIsLoading(false);
+        }
+      };
+
+      fetchCategories();
+    } catch (err: unknown) {
+      const error = err as { response: { data: { message: string } } };
+      toast.error(error?.response?.data?.message);
+      setIsLoading(false);
+    }
+  }, []);
+
   const [editorHtml, setEditorHtml] = useState<string>(
     __ISMSIE__ ? "<p>&nbsp;</p>" : ""
   );
-
-  // const [isSubmitting, setIsSubmitting] = useState(false);
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -145,6 +169,7 @@ const CreatePost = () => {
 
   return (
     <div>
+      {isLoading && <FakeLoader />}
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <div>
@@ -263,13 +288,11 @@ const CreatePost = () => {
                         <SelectValue placeholder="Select Category" />
                       </SelectTrigger>
                       <SelectContent className="text-black font-medium">
-                        <SelectItem value="1">Category 1</SelectItem>
-                        <SelectItem value="2">Category 2</SelectItem>
-                        <SelectItem value="3">Category 3</SelectItem>
-                        <SelectItem value="4">Category 4</SelectItem>
-                        <SelectItem value="5">Category 5</SelectItem>
-                        <SelectItem value="6">Category 6</SelectItem>
-                        <SelectItem value="7">Category 7</SelectItem>
+                        {categoryData?.map((item) => (
+                          <SelectItem value={item?.id} key={item?.id}>
+                            {item?.name}
+                          </SelectItem>
+                        ))}
                       </SelectContent>
                     </Select>
                   </div>
