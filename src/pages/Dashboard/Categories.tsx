@@ -135,7 +135,7 @@ const Categories = () => {
       </Form>
 
       {categoryData === null || categoryData === undefined ? (
-        <LoaderCircle className="mx-auto my-32 text-3xl animate-spin" />
+        <LoaderCircle className="mx-auto my-36 text-3xl animate-spin" />
       ) : (
         <div className="mt-10">
           <Table>

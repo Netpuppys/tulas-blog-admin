@@ -47,7 +47,7 @@ const AllPosts = () => {
       </div>
 
       {postData === null || postData === undefined ? (
-        <LoaderCircle className="mx-auto my-32 text-3xl animate-spin" />
+        <LoaderCircle className="mx-auto my-36 text-3xl animate-spin" />
       ) : postData?.length > 0 ? (
         <div>
           {postData?.map((post) => (
