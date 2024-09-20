@@ -283,18 +283,32 @@ const CreatePost = () => {
                 <div className="py-6 px-3 md:px-5 border-2 border-gray-300 rounded-sm">
                   <h1 className="mb-3 text-lg font-medium">Category</h1>
                   <div className="w-full">
-                    <Select>
-                      <SelectTrigger className="text-black font-medium outline-none">
-                        <SelectValue placeholder="Select Category" />
-                      </SelectTrigger>
-                      <SelectContent className="text-black font-medium">
-                        {categoryData?.map((item) => (
-                          <SelectItem value={item?.id} key={item?.id}>
-                            {item?.name}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                    <FormField
+                      control={form.control}
+                      name="category_id"
+                      render={({ field }) => (
+                        <FormItem>
+                          <Select
+                            onValueChange={field.onChange}
+                            defaultValue={field.value}
+                          >
+                            <FormControl>
+                              <SelectTrigger className="text-black font-medium outline-none">
+                                <SelectValue placeholder="Select Category" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent className="text-black font-medium">
+                              {categoryData?.map((item) => (
+                                <SelectItem value={item?.id} key={item?.id}>
+                                  {item?.name}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                          <FormMessage className="mt-3 text-red-500" />
+                        </FormItem>
+                      )}
+                    />
                   </div>
                 </div>
                 <div className="mt-3 py-6 px-3 md:px-5 border-2 border-gray-300 rounded-sm">
