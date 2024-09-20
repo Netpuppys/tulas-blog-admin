@@ -6,49 +6,81 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-
-import { ChangeEvent, useState } from "react";
+import axiosInstance from "@/utils/axiosInstance";
+import { Image } from "lucide-react";
+import React, { ChangeEvent, useRef, useState } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 
+const __ISMSIE__ = navigator.userAgent.match(/Trident/i) ? true : false;
+
 const CreatePost = () => {
-  const [editorValue, setEditorValue] = useState("");
+  const [editorHtml, setEditorHtml] = useState<string>(
+    __ISMSIE__ ? "<p>&nbsp;</p>" : ""
+  );
+
+  console.log(editorHtml);
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [files, setFiles] = useState<File[]>([]);
+  const reactQuillRef = useRef<ReactQuill>(null);
+  const inputOpenImageRef = useRef<HTMLInputElement>(null);
+
+  const handleChange = (html: string) => {
+    setEditorHtml(html);
+  };
+
+  const imageHandler = () => {
+    inputOpenImageRef.current?.click();
+  };
+
+  const insertImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.currentTarget.files && e.currentTarget.files.length > 0) {
+      const file = e.currentTarget.files[0];
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("key", `${Date.now()}.jpg`);
+
+      try {
+        const response = await axiosInstance.post(
+          "/common/file-upload",
+          formData,
+          {
+            headers: { "content-type": "multipart/form-data" },
+          }
+        );
+
+        if (response.data.success) {
+          const quill = reactQuillRef.current?.getEditor();
+          const range = quill?.getSelection();
+          const position = range ? range.index : 0;
+
+          // Insert the image into the Quill editor
+          quill?.insertEmbed(position, "image", response.data.data);
+          quill?.setSelection(position + 1);
+
+          // Update editorHtml state
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          //@ts-ignore
+          const updatedHtml = quill.root.innerHTML;
+          setEditorHtml(updatedHtml);
+
+          // Update files state
+          setFiles((prevFiles) => {
+            const updatedFiles = [...prevFiles, file];
+            return updatedFiles;
+          });
+        } else {
+          alert("Failed to upload file");
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  };
 
   const [selectedImage, setSelectedImage] = useState<unknown | null>(null);
   const [imgUrl, setImgUrl] = useState<string | null>(null);
-
-  console.log(editorValue);
-
-  const modules = {
-    toolbar: [
-      [{ header: [1, 2, 3, 4, 5, 6, false] }],
-      ["bold", "italic", "underline", "subscript", "superscript"],
-      [{ list: "ordered" }, { list: "bullet" }, { list: "check" }],
-      [{ indent: "-1" }, { indent: "+1" }],
-      [{ align: [] }],
-      ["blockquote", "code-block"],
-      ["link", "image"],
-      ["clean"],
-    ],
-  };
-
-  const formats = [
-    "header",
-    "bold",
-    "italic",
-    "underline",
-    "subscript",
-    "superscript",
-    "list",
-    "bullet",
-    "indent",
-    "align",
-    "link",
-    "image",
-    "blockquote",
-    "code-block",
-    "check",
-  ];
 
   const handleImageChange = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -99,14 +131,55 @@ const CreatePost = () => {
             />
           </div>
           <div className="mt-5">
-            <ReactQuill
-              theme="snow"
-              value={editorValue}
-              onChange={setEditorValue}
-              modules={modules}
-              formats={formats}
-              placeholder="Write your blog content here..."
-            />
+            <div>
+              <div id="toolbar">
+                <select
+                  className="ql-header"
+                  defaultValue={""}
+                  onChange={(e) => e.persist()}
+                >
+                  <option value="1" />
+                  <option value="2" />
+                  <option value="3" />
+                  <option value="" />
+                </select>
+                <button className="ql-bold" />
+                <button className="ql-italic" />
+                <button className="ql-underline" />
+                <button className="ql-strike" />
+                <button className="ql-insertImage" onClick={imageHandler}>
+                  <Image />
+                </button>
+                <button className="ql-link" />
+                <button className="ql-code-block" />
+                <button className="ql-blockquote" />
+                <button className="ql-list" value="ordered" />
+                <button className="ql-list" value="bullet" />
+                <button className="ql-indent" value="-1" />
+                <button className="ql-indent" value="+1" />
+                <button className="ql-align" />
+                <button className="ql-script" value="sub" />
+                <button className="ql-script" value="super" />
+                <button className="ql-check" />
+                <button className="ql-clean" />
+              </div>
+              <ReactQuill
+                ref={reactQuillRef}
+                theme="snow"
+                onChange={handleChange}
+                modules={modules}
+                formats={formats}
+                value={editorHtml}
+                placeholder="Write something awesome..."
+              />
+              <input
+                type="file"
+                accept="image/*"
+                ref={inputOpenImageRef}
+                style={{ display: "none" }}
+                onChange={insertImage}
+              />
+            </div>
           </div>
         </div>
         <div className="md:flex-[30%]">
@@ -181,5 +254,35 @@ const CreatePost = () => {
     </div>
   );
 };
+
+const modules = {
+  toolbar: {
+    container: "#toolbar",
+    handlers: {
+      insertImage: () => {}, // Handled separately
+    },
+  },
+};
+
+const formats = [
+  "header",
+  "bold",
+  "italic",
+  "underline",
+  "strike",
+  "image",
+  "link",
+  "code-block",
+  "blockquote",
+  "list",
+  "bullet",
+  "indent",
+  "align",
+  "script",
+  "subscript",
+  "superscript",
+  "check",
+  "clean",
+];
 
 export default CreatePost;
