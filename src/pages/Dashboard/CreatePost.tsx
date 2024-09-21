@@ -54,8 +54,7 @@ const FormSchema = z.object({
 });
 
 const CreatePost = () => {
-
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const [categoryData, setCategoryData] = useState<ICategoryType[] | []>();
 
@@ -169,7 +168,10 @@ const CreatePost = () => {
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
     setIsLoading(true);
-    const tagsInArray = data?.tags?.split(",").map((tag) => tag.trim());
+    const tagsInArray = data?.tags
+      ?.split(",")
+      .map((tag) => tag.trim())
+      .slice(0, 6);
 
     if (
       editorHtml == "<p><br></p>" ||
@@ -238,7 +240,7 @@ const CreatePost = () => {
         setSelectedImage(null);
         reactQuillRef.current?.getEditor().setContents([]);
         setIsLoading(false);
-        navigate("/dashboard/all-posts")
+        navigate("/dashboard/all-posts");
       }
     } catch (err: unknown) {
       const error = err as { response: { data: { message: string } } };
