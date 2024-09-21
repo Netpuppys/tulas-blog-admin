@@ -23,6 +23,7 @@ import React, { ChangeEvent, useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
+import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { z } from "zod";
 
@@ -53,6 +54,9 @@ const FormSchema = z.object({
 });
 
 const CreatePost = () => {
+
+  const navigate = useNavigate()
+
   const [categoryData, setCategoryData] = useState<ICategoryType[] | []>();
 
   const [isLoading, setIsLoading] = useState(false);
@@ -164,7 +168,83 @@ const CreatePost = () => {
   };
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
-    console.log(data);
+    setIsLoading(true);
+    const tagsInArray = data?.tags?.split(",").map((tag) => tag.trim());
+
+    if (
+      editorHtml == "<p><br></p>" ||
+      editorHtml == "<p>&nbsp;</p>" ||
+      editorHtml == "<p></p>" ||
+      editorHtml == ""
+    ) {
+      toast.error("Please enter some content. Editor cannot be empty.");
+      setIsLoading(false);
+      return;
+    }
+
+    if (!selectedImage) {
+      setIsLoading(false);
+      toast.error("Please select a banner image. Image cannot be empty.");
+      return;
+    }
+
+    try {
+      const checkIfSlugExists = await axiosInstance.get(`/post/${data.slug}`);
+      if (checkIfSlugExists?.data?.data) {
+        toast.error("Slug already exists. Please choose a different slug.");
+        setIsLoading(false);
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append("file", selectedImage as Blob);
+      formData.append("key", `${Date.now()}.jpg`);
+
+      let banner_img = "";
+
+      const bannerUploadRes = await axiosInstance.post(
+        "/common/file-upload",
+        formData,
+        {
+          headers: { "content-type": "multipart/form-data" },
+        }
+      );
+
+      if (bannerUploadRes?.data?.data) {
+        banner_img = bannerUploadRes?.data?.data;
+      }
+
+      const createPostData = {
+        title: data?.title,
+        banner_img,
+        content: editorHtml,
+        short_description: data?.short_description,
+        meta_description: data?.meta_description,
+        author_name: data?.author_name,
+        slug: data?.slug,
+        category_id: data?.category_id,
+        tags: tagsInArray,
+      };
+
+      const createPostRes = await axiosInstance.post(
+        "/post/create-post",
+        createPostData
+      );
+
+      if (createPostRes?.data?.data) {
+        toast.success("Post created successfully.");
+        form.reset();
+        setImgUrl(null);
+        setSelectedImage(null);
+        reactQuillRef.current?.getEditor().setContents([]);
+        setIsLoading(false);
+        navigate("/dashboard/all-posts")
+      }
+    } catch (err: unknown) {
+      const error = err as { response: { data: { message: string } } };
+      setIsLoading(false);
+      toast.error(error?.response?.data?.message);
+    }
   }
 
   return (
@@ -432,6 +512,11 @@ const CreatePost = () => {
                       </div>
                     )}
                   />
+                  <p className="mt-3 text-sm text-black font-medium">
+                    *Slug name must be unique and use only lowercase letters
+                    <br />
+                    *Use hyphen (-) instead of space
+                  </p>
                 </div>
               </div>
             </div>
@@ -446,7 +531,7 @@ const modules = {
   toolbar: {
     container: "#toolbar",
     handlers: {
-      insertImage: () => {}, // Handled separately
+      insertImage: () => {},
     },
   },
 };
