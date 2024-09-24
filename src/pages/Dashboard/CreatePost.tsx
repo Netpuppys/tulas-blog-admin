@@ -96,8 +96,10 @@ const CreatePost = () => {
     },
   });
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [files, setFiles] = useState<File[]>([]);
+
+  console.log(files)
+
   const reactQuillRef = useRef<ReactQuill>(null);
   const inputOpenImageRef = useRef<HTMLInputElement>(null);
 
