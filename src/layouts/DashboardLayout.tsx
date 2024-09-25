@@ -25,8 +25,8 @@ const DashboardLayout = () => {
           </Button>
         </div>
       </div>
-      <div className="pb-11 flex">
-        <div className="flex-[20%] border-r-2 border-gray-100">
+      <div className="flex">
+        <div className="flex-[20%] sticky top-0 h-screen border-r-2 border-gray-100">
           <div className="pt-5">
             <Link to="/dashboard/all-posts">
               <div
@@ -85,7 +85,7 @@ const DashboardLayout = () => {
             </Link>
           </div>
         </div>
-        <div className="p-5 md:p-10 flex-[80%]">
+        <div className="mb-10 p-5 md:p-10 flex-[80%] overflow-y-auto">
           <Outlet />
         </div>
       </div>
