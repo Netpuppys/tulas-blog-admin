@@ -9,10 +9,10 @@ import {
   SheetHeader,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { Lock } from "lucide-react";
 import { FaAngleDoubleRight } from "react-icons/fa";
-import { Link, useLocation } from "react-router-dom";
 import { TbCategory } from "react-icons/tb";
-import { Home, Lock } from "lucide-react";
+import { Link, useLocation } from "react-router-dom";
 
 const Navigation = () => {
   const location = useLocation().pathname;
@@ -41,20 +41,6 @@ const Navigation = () => {
       <SheetContent side={"left"}>
         <SheetHeader>
           <div className="pt-5">
-            <SheetClose asChild>
-              <Link to="/dashboard/home">
-                <div
-                  className={`${
-                    location === "/dashboard/home"
-                      ? "bg-gray-200 border-r-[3px] border-[#18181B]"
-                      : ""
-                  } mt-4 flex items-center gap-3 cursor-pointer py-3 px-4 rounded-l-md`}
-                >
-                  <Home className="text-xl md:text-2xl" />
-                  <h1 className="text-lg md:text-xl font-medium">Home</h1>
-                </div>
-              </Link>
-            </SheetClose>
             <SheetClose asChild>
               <Link to="/dashboard/all-posts">
                 <div

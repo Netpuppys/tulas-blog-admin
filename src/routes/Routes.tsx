@@ -7,7 +7,6 @@ import Categories from "@/pages/Dashboard/Categories";
 import CategoryPosts from "@/pages/Dashboard/CategoryPosts";
 import CreatePost from "@/pages/Dashboard/CreatePost";
 import EditPost from "@/pages/Dashboard/EditPost";
-import Home from "@/pages/Dashboard/Home";
 import {
   createBrowserRouter,
   createRoutesFromElements,
@@ -25,12 +24,15 @@ export default function AppContainer() {
         <Route
           path="*"
           element={
-            isTokenAvailable ? <Navigate to="/dashboard/home" /> : <Login />
+            isTokenAvailable ? (
+              <Navigate to="/dashboard/all-posts" />
+            ) : (
+              <Login />
+            )
           }
         />
         {isTokenAvailable ? (
           <Route path="/dashboard" element={<DashboardLayout />}>
-            <Route path="home" element={<Home />} />
             <Route path="all-posts" element={<AllPosts />} />
             <Route path="posts/:slug" element={<SinglePost />} />
             <Route path="create-post" element={<CreatePost />} />
@@ -39,7 +41,7 @@ export default function AppContainer() {
             <Route path="categories/:categoryId" element={<CategoryPosts />} />
             <Route path="change-password" element={<ChangePassword />} />
 
-            <Route path="*" element={<Navigate to="/dashboard/home" />} />
+            <Route path="*" element={<Navigate to="/dashboard/all-posts" />} />
           </Route>
         ) : (
           <>

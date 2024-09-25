@@ -77,6 +77,7 @@ const Categories = () => {
         toast.success("Category created successfully");
         setRefetch(!refetch);
         setIsSubmitting(false);
+        form.reset();
       }
     } catch (err: unknown) {
       const error = err as { response: { data: { message: string } } };
