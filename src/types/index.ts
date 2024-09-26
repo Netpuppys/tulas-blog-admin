@@ -17,6 +17,7 @@ export interface IPostType {
   banner_img: string;
   content: string;
   tags: string[];
+  meta_keywords: string[];
   short_description: string;
   meta_description: string;
   author_name: string;
