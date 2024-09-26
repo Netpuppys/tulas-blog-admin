@@ -42,6 +42,9 @@ const FormSchema = z.object({
   tags: z.string().min(1, {
     message: "Please enter atleast one tag.",
   }),
+  meta_keywords: z.string().min(1, {
+    message: "Please enter atleast one meta keyword.",
+  }),
   author_name: z.string().min(1, {
     message: "Please enter an author name.",
   }),
@@ -90,6 +93,7 @@ const CreatePost = () => {
       short_description: "",
       meta_description: "",
       tags: "",
+      meta_keywords: "",
       author_name: "",
       slug: "",
       category_id: "",
@@ -98,7 +102,7 @@ const CreatePost = () => {
 
   const [files, setFiles] = useState<File[]>([]);
 
-  console.log(files)
+  console.log(files);
 
   const reactQuillRef = useRef<ReactQuill>(null);
   const inputOpenImageRef = useRef<HTMLInputElement>(null);
@@ -174,6 +178,10 @@ const CreatePost = () => {
       ?.split(",")
       .map((tag) => tag.trim())
       .slice(0, 6);
+    const metaKeyWordsInArray = data?.meta_keywords
+      ?.split(",")
+      .map((keyword) => keyword.trim())
+      .slice(0, 10);
 
     if (
       editorHtml == "<p><br></p>" ||
@@ -228,6 +236,7 @@ const CreatePost = () => {
         slug: data?.slug,
         category_id: data?.category_id,
         tags: tagsInArray,
+        meta_keywords: metaKeyWordsInArray,
       };
 
       const createPostRes = await axiosInstance.post(
@@ -421,6 +430,34 @@ const CreatePost = () => {
                   </div>
                   <p className="mt-3 text-sm text-black font-medium">
                     *Separate tags with commas.
+                  </p>
+                </div>
+                <div className="mt-3 py-6 px-3 md:px-5 border-2 border-gray-300 rounded-sm">
+                  <h1 className="mb-3 text-lg font-medium">Meta Keywords</h1>
+                  <div className="flex gap-2">
+                    <FormField
+                      control={form.control}
+                      name="meta_keywords"
+                      render={({ field }) => (
+                        <div className="w-full flex-1">
+                          <FormItem>
+                            <FormControl>
+                              <Input
+                                className="px-3 md:px-4 py-2 w-full text-sm md:text-base bg-gray-100 border-b-2 border-gray-200 rounded-md outline-none"
+                                type="text"
+                                placeholder="Enter Meta Keywords"
+                                {...field}
+                              />
+                            </FormControl>
+                          </FormItem>
+
+                          <FormMessage className="mt-3 text-red-500" />
+                        </div>
+                      )}
+                    />
+                  </div>
+                  <p className="mt-3 text-sm text-black font-medium">
+                    *Separate keywords with commas.
                   </p>
                 </div>
                 <div className="mt-3 py-6 px-3 md:px-5 border-2 border-gray-300 rounded-sm">
