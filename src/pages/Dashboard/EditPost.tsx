@@ -73,7 +73,7 @@ const EditPost = () => {
   const reactQuillRef = useRef<ReactQuill>(null);
   const inputOpenImageRef = useRef<HTMLInputElement>(null);
 
-  //@ts-ignore
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [files, setFiles] = useState<File[]>([]);
 
   // Fetch the post data based on slug
@@ -119,8 +119,25 @@ const EditPost = () => {
     },
   });
 
+  const addHeadingIds = (html: string) => {
+    const tempDiv = document.createElement("div");
+    tempDiv.innerHTML = html;
+
+    const headings = tempDiv.querySelectorAll("h1, h2, h3");
+
+    // Assign unique IDs to each heading
+    headings.forEach((heading, index) => {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      //@ts-ignore
+      const text = heading.innerText.toLowerCase().replace(/\s+/g, "-"); // Slugify text
+      heading.setAttribute("id", `${text}-${index}`); // Ensure unique ID with index
+    });
+
+    return tempDiv.innerHTML;
+  };
+
   const handleChange = (html: string) => {
-    setEditorHtml(html); // Update the editor state as the user types
+    setEditorHtml(html); // Update the editor content as the user types
   };
 
   const imageHandler = () => {
@@ -232,10 +249,12 @@ const EditPost = () => {
         }
       }
 
+      const contentWithIds = addHeadingIds(editorHtml);
+
       const updatePostData = {
         title: data?.title,
         banner_img,
-        content: editorHtml,
+        content: contentWithIds,
         short_description: data?.short_description,
         meta_description: data?.meta_description,
         author_name: data?.author_name,

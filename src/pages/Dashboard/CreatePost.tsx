@@ -86,6 +86,28 @@ const CreatePost = () => {
     __ISMSIE__ ? "<p>&nbsp;</p>" : ""
   );
 
+  const handleChange = (content: string) => {
+    setEditorHtml(content);
+  };
+
+  // Function to add unique IDs to headings on submission
+  const addHeadingIds = (html: string) => {
+    const tempDiv = document.createElement("div");
+    tempDiv.innerHTML = html;
+
+    const headings = tempDiv.querySelectorAll("h1, h2, h3");
+
+    // Assign unique IDs to each heading
+    headings.forEach((heading, index) => {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      //@ts-ignore
+      const text = heading.innerText.toLowerCase().replace(/\s+/g, "-");
+      heading.setAttribute("id", `${text}-${index}`);
+    });
+
+    return tempDiv.innerHTML;
+  };
+
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -100,15 +122,15 @@ const CreatePost = () => {
     },
   });
 
-  //@ts-ignore
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [files, setFiles] = useState<File[]>([]);
 
   const reactQuillRef = useRef<ReactQuill>(null);
   const inputOpenImageRef = useRef<HTMLInputElement>(null);
 
-  const handleChange = (html: string) => {
-    setEditorHtml(html);
-  };
+  // const handleChange = (html: string) => {
+  //   setEditorHtml(html);
+  // };
 
   const imageHandler = () => {
     inputOpenImageRef.current?.click();
@@ -225,10 +247,12 @@ const CreatePost = () => {
         banner_img = bannerUploadRes?.data?.data;
       }
 
+      const contentWithIds = addHeadingIds(editorHtml);
+
       const createPostData = {
         title: data?.title,
         banner_img,
-        content: editorHtml,
+        content: contentWithIds,
         short_description: data?.short_description,
         meta_description: data?.meta_description,
         author_name: data?.author_name,
