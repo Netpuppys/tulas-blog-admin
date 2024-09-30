@@ -73,8 +73,10 @@ const EditPost = () => {
   const reactQuillRef = useRef<ReactQuill>(null);
   const inputOpenImageRef = useRef<HTMLInputElement>(null);
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+
   const [files, setFiles] = useState<File[]>([]);
+
+  console.log(files);
 
   // Fetch the post data based on slug
   useEffect(() => {
