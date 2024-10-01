@@ -71,6 +71,14 @@ const SinglePost = () => {
               </header>
             </div>
 
+            <div>
+              <img
+                src={postData?.banner_img}
+                className="rounded-md"
+                alt="blog_img"
+              />
+            </div>
+
             {/* Table of Contents */}
             {tocItems.length > 0 && (
               <div className="my-8">
