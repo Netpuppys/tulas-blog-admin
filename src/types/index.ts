@@ -14,6 +14,7 @@ export interface IPostCategoryType {
 export interface IPostType {
   id: string;
   title: string;
+  meta_title: string;
   banner_img: string;
   content: string;
   tags: string[];

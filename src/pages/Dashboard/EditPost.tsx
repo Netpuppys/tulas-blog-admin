@@ -33,21 +33,14 @@ const FormSchema = z.object({
   title: z.string().min(1, {
     message: "Please enter a title name.",
   }),
-  short_description: z.string().min(1, {
-    message: "Please enter a short description.",
+  meta_title: z.string().min(1, {
+    message: "Please enter a meta title.",
   }),
-  meta_description: z.string().min(1, {
-    message: "Please enter a meta description.",
-  }),
-  tags: z.string().min(1, {
-    message: "Please enter atleast one tag.",
-  }),
-  meta_keywords: z.string().min(1, {
-    message: "Please enter atleast one meta keyword.",
-  }),
-  author_name: z.string().min(1, {
-    message: "Please enter an author name.",
-  }),
+  short_description: z.string(),
+  meta_description: z.string(),
+  tags: z.string(),
+  meta_keywords: z.string(),
+  author_name: z.string(),
   slug: z.string().min(1, {
     message: "Please enter a slug.",
   }),
@@ -72,7 +65,6 @@ const EditPost = () => {
 
   const reactQuillRef = useRef<ReactQuill>(null);
   const inputOpenImageRef = useRef<HTMLInputElement>(null);
-
 
   const [files, setFiles] = useState<File[]>([]);
 
@@ -111,6 +103,7 @@ const EditPost = () => {
     resolver: zodResolver(FormSchema),
     defaultValues: {
       title: postData?.title,
+      meta_title: postData?.meta_title,
       short_description: postData?.short_description,
       meta_description: postData?.meta_description,
       tags: postData?.tags.join(", "),
@@ -255,6 +248,7 @@ const EditPost = () => {
 
       const updatePostData = {
         title: data?.title,
+        meta_title: data?.meta_title,
         banner_img,
         content: contentWithIds,
         short_description: data?.short_description,
@@ -341,6 +335,29 @@ const EditPost = () => {
                               <Input
                                 type="text"
                                 placeholder="Enter Blog Title"
+                                {...field}
+                                className="mt-5 px-3 md:px-4 py-3 md:py-4 w-full text-base md:text-xl bg-gray-100 border-b-2 border-gray-200 rounded-md outline-none"
+                              />
+                            </FormControl>
+                          </FormItem>
+
+                          <FormMessage className="mt-3 text-red-500" />
+                        </div>
+                      )}
+                    />
+                  </div>
+                  <div>
+                    <FormField
+                      control={form.control}
+                      defaultValue={postData?.meta_title}
+                      name="meta_title"
+                      render={({ field }) => (
+                        <div className="w-full flex-1">
+                          <FormItem>
+                            <FormControl>
+                              <Input
+                                type="text"
+                                placeholder="Enter Blog Meta Title"
                                 {...field}
                                 className="mt-5 px-3 md:px-4 py-3 md:py-4 w-full text-base md:text-xl bg-gray-100 border-b-2 border-gray-200 rounded-md outline-none"
                               />
