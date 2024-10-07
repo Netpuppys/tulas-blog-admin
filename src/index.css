@@ -17,3 +17,11 @@
 html {
   scroll-behavior: smooth;
 }
+
+.editor-container {
+  @apply p-4 border border-gray-300 rounded-lg outline-none !border-none;
+}
+
+.tiptap {
+  @apply p-4 border border-gray-300 rounded-lg !border-none focus:border-none ring-transparent ring-0 focus:ring-0 focus:ring-transparent outline-none focus:outline-none;
+}
