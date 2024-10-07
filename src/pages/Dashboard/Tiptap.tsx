@@ -123,161 +123,185 @@ const Tiptap = () => {
   return (
     <div className="editor-container">
       {/* Custom Toolbar */}
-      <div className="flex flex-wrap bg-gray-200 gap-2">
-        <div className="px-2 py-3 flex items-center bg-gray-200 gap-2 border-2 border-gray-200">
-          <button
-            onClick={() => editor.chain().focus().setParagraph().run()}
-            className={`${
-              isActive("paragraph") ? "active bg-purple-500/70 rounded-sm" : ""
-            } px-2 py-[0.5px]`}
-          >
-            <h1 className="text-[1.46rem] font-medium">P</h1>
-          </button>
-          <button
-            onClick={() => editor.chain().focus().toggleBold().run()}
-            className={`${
-              isActive("bold") ? "active bg-purple-500/70 rounded-sm" : ""
-            } px-2 py-2`}
-          >
-            <FaBold className="h-5 w-5" />
-          </button>
-          <button
-            onClick={() => editor.chain().focus().toggleItalic().run()}
-            className={`${
-              isActive("italic") ? "active bg-purple-500/70 rounded-sm" : ""
-            } px-2 py-2`}
-          >
-            <FaItalic className="h-5 w-5" />
-          </button>
-          <button
-            onClick={() => editor.chain().focus().toggleUnderline().run()}
-            className={`${
-              isActive("underline") ? "active bg-purple-500/70 rounded-sm" : ""
-            } px-2 py-2`}
-          >
-            <FaUnderline className="h-5 w-5" />
-          </button>
-          <button
-            onClick={() => editor.chain().focus().toggleStrike().run()}
-            className={`${
-              isActive("strike") ? "active bg-purple-500/70 rounded-sm" : ""
-            } px-2 py-2`}
-          >
-            <FaStrikethrough className="h-5 w-5" />
-          </button>
-          <button
-            onClick={() =>
-              editor.chain().focus().toggleHeading({ level: 1 }).run()
-            }
-            className={`${
-              isActive("heading") && editor.isActive("heading", { level: 1 })
-                ? "active bg-purple-500/70 rounded-sm"
-                : ""
-            } px-2 py-2`}
-          >
-            <RiH1 className="h-6 w-6" />
-          </button>{" "}
-          <button
-            onClick={() =>
-              editor.chain().focus().toggleHeading({ level: 2 }).run()
-            }
-            className={`${
-              isActive("heading") && editor.isActive("heading", { level: 2 })
-                ? "active bg-purple-500/70 rounded-sm"
-                : ""
-            } px-2 py-2`}
-          >
-            <RiH2 className="h-6 w-6" />
-          </button>
-          <button
-            onClick={() => editor.chain().focus().toggleBulletList().run()}
-            className={`${
-              isActive("bulletList") ? "active bg-purple-500/70 rounded-sm" : ""
-            } px-2 py-2`}
-          >
-            <LuLayoutList className="h-5 w-5" />
-          </button>
-          <button
-            onClick={() => editor.chain().focus().toggleOrderedList().run()}
-            className={`${
-              isActive("orderedList")
-                ? "active bg-purple-500/70 rounded-sm"
-                : ""
-            } px-2 py-2`}
-          >
-            <RiListOrdered2 className="h-6 w-6" />
-          </button>
-          <button
-            onClick={() => editor.chain().focus().toggleBlockquote().run()}
-            className={`${
-              isActive("blockquote") ? "active bg-purple-500/70 rounded-sm" : ""
-            } px-2 py-2`}
-          >
-            <RxQuote className="h-6 w-6" />
-          </button>
-          <input
-            type="file"
-            accept="image/*"
-            onChange={handleImageUpload}
-            className="hidden"
-            id="image-upload"
-          />
-          <label htmlFor="image-upload" className="cursor-pointer">
-            <MdImage className="h-6 w-6" />
-          </label>
-        </div>
-
-        <div className="px-2 py-3 flex items-center bg-gray-200 gap-4 border-2 border-gray-200">
-          <button
-            onClick={() =>
-              editor
-                .chain()
-                .focus()
-                .insertTable({ rows: 3, cols: 3, withHeaderRow: true })
-                .run()
-            }
-          >
-            <FaTableCellsLarge className="h-5 w-5" />
-          </button>
-          <button
-            onClick={() => editor.chain().focus().addColumnBefore().run()}
-          >
-            <PiColumnsPlusLeft className="h-6 w-6" />
-          </button>
-          <button onClick={() => editor.chain().focus().addColumnAfter().run()}>
-            <PiColumnsPlusRight className="h-6 w-6" />
-          </button>
-          <button onClick={() => editor.chain().focus().deleteColumn().run()}>
-            <TbColumnRemove className="h-6 w-6" />
-          </button>
-          <button onClick={() => editor.chain().focus().addRowBefore().run()}>
-            <PiRowsPlusTop className="h-6 w-6" />
-          </button>
-          <button onClick={() => editor.chain().focus().addRowAfter().run()}>
-            <PiRowsPlusBottom className="h-6 w-6" />
-          </button>
-          <button onClick={() => editor.chain().focus().deleteRow().run()}>
-            <TbRowRemove className="h-6 w-6" />
-          </button>
-          <button onClick={() => editor.chain().focus().deleteTable().run()}>
-            <TbTableMinus className="h-6 w-6" />
-          </button>
-          <button onClick={() => editor.chain().focus().mergeCells().run()}>
-            <AiOutlineMergeCells className="h-6 w-6" />
-          </button>
-          <button onClick={() => editor.chain().focus().splitCell().run()}>
-            <AiOutlineSplitCells className="h-6 w-6" />
-          </button>
-          <button onClick={() => editor.chain().focus().goToNextCell().run()}>
-            <GrFormNextLink className="h-6 w-6" />
-          </button>
-          <button
-            onClick={() => editor.chain().focus().goToPreviousCell().run()}
-          >
-            <GrFormPreviousLink className="h-6 w-6" />
-          </button>
-        </div>
+      <div className="px-2 py-3 flex flex-wrap items-center bg-gray-200 border-2 border-gray-200">
+        <button
+          onClick={() => editor.chain().focus().setParagraph().run()}
+          className={`${
+            isActive("paragraph") ? "active bg-purple-500/70 rounded-sm" : ""
+          } px-2 py-[0.5px]`}
+        >
+          <h1 className="text-[1.46rem] font-medium">P</h1>
+        </button>
+        <button
+          onClick={() => editor.chain().focus().toggleBold().run()}
+          className={`${
+            isActive("bold") ? "active bg-purple-500/70 rounded-sm" : ""
+          } px-2 py-2`}
+        >
+          <FaBold className="h-5 w-5" />
+        </button>
+        <button
+          onClick={() => editor.chain().focus().toggleItalic().run()}
+          className={`${
+            isActive("italic") ? "active bg-purple-500/70 rounded-sm" : ""
+          } px-2 py-2`}
+        >
+          <FaItalic className="h-5 w-5" />
+        </button>
+        <button
+          onClick={() => editor.chain().focus().toggleUnderline().run()}
+          className={`${
+            isActive("underline") ? "active bg-purple-500/70 rounded-sm" : ""
+          } px-2 py-2`}
+        >
+          <FaUnderline className="h-5 w-5" />
+        </button>
+        <button
+          onClick={() => editor.chain().focus().toggleStrike().run()}
+          className={`${
+            isActive("strike") ? "active bg-purple-500/70 rounded-sm" : ""
+          } px-2 py-2`}
+        >
+          <FaStrikethrough className="h-5 w-5" />
+        </button>
+        <button
+          onClick={() =>
+            editor.chain().focus().toggleHeading({ level: 1 }).run()
+          }
+          className={`${
+            isActive("heading") && editor.isActive("heading", { level: 1 })
+              ? "active bg-purple-500/70 rounded-sm"
+              : ""
+          } px-2 py-2`}
+        >
+          <RiH1 className="h-6 w-6" />
+        </button>
+        <button
+          onClick={() =>
+            editor.chain().focus().toggleHeading({ level: 2 }).run()
+          }
+          className={`${
+            isActive("heading") && editor.isActive("heading", { level: 2 })
+              ? "active bg-purple-500/70 rounded-sm"
+              : ""
+          } px-2 py-2`}
+        >
+          <RiH2 className="h-6 w-6" />
+        </button>
+        <button
+          onClick={() => editor.chain().focus().toggleBulletList().run()}
+          className={`${
+            isActive("bulletList") ? "active bg-purple-500/70 rounded-sm" : ""
+          } px-2 py-2`}
+        >
+          <LuLayoutList className="h-5 w-5" />
+        </button>
+        <button
+          onClick={() => editor.chain().focus().toggleOrderedList().run()}
+          className={`${
+            isActive("orderedList") ? "active bg-purple-500/70 rounded-sm" : ""
+          } px-2 py-2`}
+        >
+          <RiListOrdered2 className="h-6 w-6" />
+        </button>
+        <button
+          onClick={() => editor.chain().focus().toggleBlockquote().run()}
+          className={`${
+            isActive("blockquote") ? "active bg-purple-500/70 rounded-sm" : ""
+          } px-2 py-2`}
+        >
+          <RxQuote className="h-6 w-6" />
+        </button>
+        <input
+          type="file"
+          accept="image/*"
+          onChange={handleImageUpload}
+          className="hidden"
+          id="image-upload"
+        />
+        <label htmlFor="image-upload" className="cursor-pointer">
+          <MdImage className="mx-2 h-6 w-6" />
+        </label>
+        <button
+          className="px-2"
+          onClick={() =>
+            editor
+              .chain()
+              .focus()
+              .insertTable({ rows: 3, cols: 3, withHeaderRow: true })
+              .run()
+          }
+        >
+          <FaTableCellsLarge className="h-5 w-5" />
+        </button>
+        <button
+          className="px-2"
+          onClick={() => editor.chain().focus().addColumnBefore().run()}
+        >
+          <PiColumnsPlusLeft className="h-6 w-6" />
+        </button>
+        <button
+          className="px-2"
+          onClick={() => editor.chain().focus().addColumnAfter().run()}
+        >
+          <PiColumnsPlusRight className="h-6 w-6" />
+        </button>
+        <button
+          className="px-2"
+          onClick={() => editor.chain().focus().deleteColumn().run()}
+        >
+          <TbColumnRemove className="h-6 w-6" />
+        </button>
+        <button
+          className="px-2"
+          onClick={() => editor.chain().focus().addRowBefore().run()}
+        >
+          <PiRowsPlusTop className="h-6 w-6" />
+        </button>
+        <button
+          className="px-2"
+          onClick={() => editor.chain().focus().addRowAfter().run()}
+        >
+          <PiRowsPlusBottom className="h-6 w-6" />
+        </button>
+        <button
+          className="px-2"
+          onClick={() => editor.chain().focus().deleteRow().run()}
+        >
+          <TbRowRemove className="h-6 w-6" />
+        </button>
+        <button
+          className="px-2"
+          onClick={() => editor.chain().focus().deleteTable().run()}
+        >
+          <TbTableMinus className="h-6 w-6" />
+        </button>
+        <button
+          className="px-2"
+          onClick={() => editor.chain().focus().mergeCells().run()}
+        >
+          <AiOutlineMergeCells className="h-6 w-6" />
+        </button>
+        <button
+          className="px-2"
+          onClick={() => editor.chain().focus().splitCell().run()}
+        >
+          <AiOutlineSplitCells className="h-6 w-6" />
+        </button>
+        <button
+          className="px-2"
+          onClick={() => editor.chain().focus().goToNextCell().run()}
+        >
+          <GrFormNextLink className="h-6 w-6" />
+        </button>
+        <button
+          className="px-2"
+          onClick={() => editor.chain().focus().goToPreviousCell().run()}
+        >
+          <GrFormPreviousLink className="h-6 w-6" />
+        </button>
       </div>
+      {/* </div> */}
 
       {/* Editor Content */}
       <EditorContent
