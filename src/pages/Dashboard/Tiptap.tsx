@@ -133,7 +133,6 @@ const Tiptap = () => {
           >
             <h1 className="text-[1.46rem] font-medium">P</h1>
           </button>
-
           <button
             onClick={() => editor.chain().focus().toggleBold().run()}
             className={`${
@@ -158,7 +157,6 @@ const Tiptap = () => {
           >
             <FaUnderline className="h-5 w-5" />
           </button>
-
           <button
             onClick={() => editor.chain().focus().toggleStrike().run()}
             className={`${
@@ -172,19 +170,19 @@ const Tiptap = () => {
               editor.chain().focus().toggleHeading({ level: 1 }).run()
             }
             className={`${
-              isActive("heading", { level: 1 })
+              isActive("heading") && editor.isActive("heading", { level: 1 })
                 ? "active bg-purple-500/70 rounded-sm"
                 : ""
             } px-2 py-2`}
           >
             <RiH1 className="h-6 w-6" />
-          </button>
+          </button>{" "}
           <button
             onClick={() =>
               editor.chain().focus().toggleHeading({ level: 2 }).run()
             }
             className={`${
-              isActive("heading", { level: 2 })
+              isActive("heading") && editor.isActive("heading", { level: 2 })
                 ? "active bg-purple-500/70 rounded-sm"
                 : ""
             } px-2 py-2`}
@@ -283,7 +281,7 @@ const Tiptap = () => {
 
       {/* Editor Content */}
       <EditorContent
-        className="prose prose-lg max-w-none border-2 border-gray-300"
+        className="prose max-w-none border-2 border-gray-300"
         editor={editor}
       />
     </div>
