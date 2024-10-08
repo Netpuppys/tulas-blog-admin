@@ -7,7 +7,6 @@ import Categories from "@/pages/Dashboard/Categories";
 import CategoryPosts from "@/pages/Dashboard/CategoryPosts";
 import CreatePost from "@/pages/Dashboard/CreatePost";
 import EditPost from "@/pages/Dashboard/EditPost";
-import Tiptap from "@/pages/Dashboard/Tiptap";
 import {
   createBrowserRouter,
   createRoutesFromElements,
@@ -41,8 +40,7 @@ export default function AppContainer() {
             <Route path="categories" element={<Categories />} />
             <Route path="categories/:categoryId" element={<CategoryPosts />} />
             <Route path="change-password" element={<ChangePassword />} />
-            <Route path="tiptap" element={<Tiptap />} />
-
+            
             <Route path="*" element={<Navigate to="/dashboard/all-posts" />} />
           </Route>
         ) : (

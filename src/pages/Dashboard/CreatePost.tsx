@@ -18,16 +18,47 @@ import { ICategoryType } from "@/types";
 import axiosInstance from "@/utils/axiosInstance";
 import FakeLoader from "@/utils/FakeLoader";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Image } from "lucide-react";
-import React, { ChangeEvent, useEffect, useRef, useState } from "react";
+import Blockquote from "@tiptap/extension-blockquote";
+import Bold from "@tiptap/extension-bold";
+import BulletList from "@tiptap/extension-bullet-list";
+import Heading from "@tiptap/extension-heading";
+import Image from "@tiptap/extension-image";
+import Italic from "@tiptap/extension-italic";
+import ListItem from "@tiptap/extension-list-item";
+import OrderedList from "@tiptap/extension-ordered-list";
+import Paragraph from "@tiptap/extension-paragraph";
+import Strike from "@tiptap/extension-strike";
+import Subscript from "@tiptap/extension-subscript";
+import Superscript from "@tiptap/extension-superscript";
+import Table from "@tiptap/extension-table";
+import TableCell from "@tiptap/extension-table-cell";
+import TableHeader from "@tiptap/extension-table-header";
+import TableRow from "@tiptap/extension-table-row";
+import Align from "@tiptap/extension-text-align";
+import Underline from "@tiptap/extension-underline";
+import { EditorContent, useEditor } from "@tiptap/react";
+import StarterKit from "@tiptap/starter-kit";
+import React, { ChangeEvent, useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import ReactQuill from "react-quill";
-import "react-quill/dist/quill.snow.css";
+import { AiOutlineMergeCells, AiOutlineSplitCells } from "react-icons/ai";
+import { FaBold, FaItalic, FaStrikethrough, FaUnderline } from "react-icons/fa";
+import { FaTableCellsLarge } from "react-icons/fa6";
+import { GrFormNextLink, GrFormPreviousLink } from "react-icons/gr";
+import { LuLayoutList } from "react-icons/lu";
+import { MdImage } from "react-icons/md";
+import {
+  PiColumnsPlusLeft,
+  PiColumnsPlusRight,
+  PiRowsPlusBottom,
+  PiRowsPlusTop,
+} from "react-icons/pi";
+import { RiH1, RiH2, RiListOrdered2 } from "react-icons/ri";
+import { RxQuote } from "react-icons/rx";
+import { TbColumnRemove, TbRowRemove, TbTableMinus } from "react-icons/tb";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { z } from "zod";
-
-const __ISMSIE__ = navigator.userAgent.match(/Trident/i) ? true : false;
+import "./Tiptap.css";
 
 const FormSchema = z.object({
   title: z.string().min(1, {
@@ -49,7 +80,80 @@ const FormSchema = z.object({
   }),
 });
 
+const extensions = [
+  StarterKit,
+  Paragraph,
+  Heading.configure({ levels: [1, 2] }),
+  Bold,
+  Italic,
+  Underline,
+  Strike,
+  Image,
+  Blockquote,
+  ListItem,
+  BulletList,
+  OrderedList,
+  Align,
+  Superscript,
+  Subscript,
+  Table.configure({
+    resizable: true,
+  }),
+  TableRow,
+  TableHeader,
+  TableCell,
+];
+
 const CreatePost = () => {
+  const editor = useEditor({
+    extensions,
+    content: "",
+  });
+
+  // Utility function to check if an editor command is active
+  const isActive = useCallback(
+    (format: string) => editor?.isActive(format) || false,
+    [editor]
+  );
+
+  const uploadImageToS3 = async (file: File): Promise<string> => {
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("key", `${Date.now()}.jpg`);
+
+      const response = await axiosInstance.post(
+        "/common/file-upload",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      // Return the S3 URL from the response
+      return response?.data?.data;
+    } catch (error) {
+      console.error("Image upload failed:", error);
+      throw error;
+    }
+  };
+
+  const handleImageUpload = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const file = event.target.files?.[0];
+    if (file && editor) {
+      try {
+        const imageUrl = await uploadImageToS3(file);
+        editor.chain().focus().setImage({ src: imageUrl }).run();
+      } catch (error) {
+        console.error("Failed to upload and insert image:", error);
+      }
+    }
+  };
+
   const navigate = useNavigate();
 
   const [categoryData, setCategoryData] = useState<ICategoryType[] | []>();
@@ -75,20 +179,12 @@ const CreatePost = () => {
     }
   }, []);
 
-  const [editorHtml, setEditorHtml] = useState<string>(
-    __ISMSIE__ ? "<p>&nbsp;</p>" : ""
-  );
-
-  const handleChange = (content: string) => {
-    setEditorHtml(content);
-  };
-
   // Function to add unique IDs to headings on submission
   const addHeadingIds = (html: string) => {
     const tempDiv = document.createElement("div");
     tempDiv.innerHTML = html;
 
-    const headings = tempDiv.querySelectorAll("h1, h2, h3");
+    const headings = tempDiv.querySelectorAll("h1, h2");
 
     // Assign unique IDs to each heading
     headings.forEach((heading, index) => {
@@ -116,62 +212,6 @@ const CreatePost = () => {
     },
   });
 
-  const [files, setFiles] = useState<File[]>([]);
-
-  console.log(files);
-
-  const reactQuillRef = useRef<ReactQuill>(null);
-  const inputOpenImageRef = useRef<HTMLInputElement>(null);
-
-  const imageHandler = () => {
-    inputOpenImageRef.current?.click();
-  };
-
-  const insertImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.currentTarget.files && e.currentTarget.files.length > 0) {
-      const file = e.currentTarget.files[0];
-      const formData = new FormData();
-      formData.append("file", file);
-      formData.append("key", `${Date.now()}.jpg`);
-
-      try {
-        const response = await axiosInstance.post(
-          "/common/file-upload",
-          formData,
-          {
-            headers: { "content-type": "multipart/form-data" },
-          }
-        );
-
-        if (response.data.success) {
-          const quill = reactQuillRef.current?.getEditor();
-          const range = quill?.getSelection();
-          const position = range ? range.index : 0;
-
-          // Insert the image into the Quill editor
-          quill?.insertEmbed(position, "image", response.data.data);
-          quill?.setSelection(position + 1);
-
-          // Update editorHtml state
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          //@ts-ignore
-          const updatedHtml = quill.root.innerHTML;
-          setEditorHtml(updatedHtml);
-
-          // Update files state
-          setFiles((prevFiles) => {
-            const updatedFiles = [...prevFiles, file];
-            return updatedFiles;
-          });
-        } else {
-          alert("Failed to upload file");
-        }
-      } catch (error) {
-        console.error(error);
-      }
-    }
-  };
-
   const [selectedImage, setSelectedImage] = useState<unknown | null>(null);
   const [imgUrl, setImgUrl] = useState<string | null>(null);
 
@@ -186,6 +226,9 @@ const CreatePost = () => {
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
     setIsLoading(true);
+
+    const editorHtml = editor?.getHTML();
+
     const tagsInArray = data?.tags
       ?.split(",")
       .map((tag) => tag.trim())
@@ -239,7 +282,7 @@ const CreatePost = () => {
         banner_img = bannerUploadRes?.data?.data;
       }
 
-      const contentWithIds = addHeadingIds(editorHtml);
+      const contentWithIds = addHeadingIds(editorHtml as string);
 
       const createPostData = {
         title: data?.title,
@@ -265,7 +308,6 @@ const CreatePost = () => {
         form.reset();
         setImgUrl(null);
         setSelectedImage(null);
-        reactQuillRef.current?.getEditor().setContents([]);
         setIsLoading(false);
         navigate("/dashboard/all-posts");
       }
@@ -274,6 +316,11 @@ const CreatePost = () => {
       setIsLoading(false);
       toast.error(error?.response?.data?.message);
     }
+  }
+
+  if (!editor) {
+    setIsLoading(true);
+    return null;
   }
 
   return (
@@ -359,53 +406,277 @@ const CreatePost = () => {
                   />
                 </div>
                 <div className="mt-5">
-                  <div>
-                    <div id="toolbar">
-                      <select
-                        className="ql-header"
-                        defaultValue={""}
-                        onChange={(e) => e.persist()}
+                  <div className="editor-container">
+                    {/* Custom Toolbar */}
+                    <div className="px-2 py-3 flex gap-y-3 gap-x-2 flex-wrap items-center bg-gray-200 border-2 border-gray-200">
+                      <button
+                        type="button"
+                        onClick={() =>
+                          editor.chain().focus().setParagraph().run()
+                        }
+                        className={`${
+                          isActive("paragraph")
+                            ? "active bg-purple-500/70 rounded-sm"
+                            : ""
+                        } px-2 py-[0.5px]`}
                       >
-                        <option value="1" />
-                        <option value="2" />
-                        <option value="3" />
-                        <option value="" />
-                      </select>
-                      <button className="ql-bold" />
-                      <button className="ql-italic" />
-                      <button className="ql-underline" />
-                      <button className="ql-strike" />
-                      <button className="ql-insertImage" onClick={imageHandler}>
-                        <Image />
+                        <h1 className="text-[1.46rem] font-medium">P</h1>
                       </button>
-                      <button className="ql-link" />
-                      <button className="ql-code-block" />
-                      <button className="ql-blockquote" />
-                      <button className="ql-list" value="ordered" />
-                      <button className="ql-list" value="bullet" />
-                      <button className="ql-indent" value="-1" />
-                      <button className="ql-indent" value="+1" />
-                      <button className="ql-align" />
-                      <button className="ql-script" value="sub" />
-                      <button className="ql-script" value="super" />
-                      <button className="ql-check" />
-                      <button className="ql-clean" />
+                      <button
+                        type="button"
+                        onClick={() =>
+                          editor.chain().focus().toggleBold().run()
+                        }
+                        className={`${
+                          isActive("bold")
+                            ? "active bg-purple-500/70 rounded-sm"
+                            : ""
+                        } px-2 py-2`}
+                      >
+                        <FaBold className="h-5 w-5" />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() =>
+                          editor.chain().focus().toggleItalic().run()
+                        }
+                        className={`${
+                          isActive("italic")
+                            ? "active bg-purple-500/70 rounded-sm"
+                            : ""
+                        } px-2 py-2`}
+                      >
+                        <FaItalic className="h-5 w-5" />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() =>
+                          editor.chain().focus().toggleUnderline().run()
+                        }
+                        className={`${
+                          isActive("underline")
+                            ? "active bg-purple-500/70 rounded-sm"
+                            : ""
+                        } px-2 py-2`}
+                      >
+                        <FaUnderline className="h-5 w-5" />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() =>
+                          editor.chain().focus().toggleStrike().run()
+                        }
+                        className={`${
+                          isActive("strike")
+                            ? "active bg-purple-500/70 rounded-sm"
+                            : ""
+                        } px-2 py-2`}
+                      >
+                        <FaStrikethrough className="h-5 w-5" />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() =>
+                          editor
+                            .chain()
+                            .focus()
+                            .toggleHeading({ level: 1 })
+                            .run()
+                        }
+                        className={`${
+                          isActive("heading") &&
+                          editor.isActive("heading", { level: 1 })
+                            ? "active bg-purple-500/70 rounded-sm"
+                            : ""
+                        } px-2 py-2`}
+                      >
+                        <RiH1 className="h-6 w-6" />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() =>
+                          editor
+                            .chain()
+                            .focus()
+                            .toggleHeading({ level: 2 })
+                            .run()
+                        }
+                        className={`${
+                          isActive("heading") &&
+                          editor.isActive("heading", { level: 2 })
+                            ? "active bg-purple-500/70 rounded-sm"
+                            : ""
+                        } px-2 py-2`}
+                      >
+                        <RiH2 className="h-6 w-6" />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() =>
+                          editor.chain().focus().toggleBulletList().run()
+                        }
+                        className={`${
+                          isActive("bulletList")
+                            ? "active bg-purple-500/70 rounded-sm"
+                            : ""
+                        } px-2 py-2`}
+                      >
+                        <LuLayoutList className="h-5 w-5" />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() =>
+                          editor.chain().focus().toggleOrderedList().run()
+                        }
+                        className={`${
+                          isActive("orderedList")
+                            ? "active bg-purple-500/70 rounded-sm"
+                            : ""
+                        } px-2 py-2`}
+                      >
+                        <RiListOrdered2 className="h-6 w-6" />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() =>
+                          editor.chain().focus().toggleBlockquote().run()
+                        }
+                        className={`${
+                          isActive("blockquote")
+                            ? "active bg-purple-500/70 rounded-sm"
+                            : ""
+                        } px-2 py-2`}
+                      >
+                        <RxQuote className="h-6 w-6" />
+                      </button>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={handleImageUpload}
+                        className="hidden"
+                        id="image-upload"
+                      />
+                      <label htmlFor="image-upload" className="cursor-pointer">
+                        <MdImage className="mx-2 h-6 w-6" />
+                      </label>
+                      <button
+                        type="button"
+                        className="px-2"
+                        onClick={() =>
+                          editor
+                            .chain()
+                            .focus()
+                            .insertTable({
+                              rows: 3,
+                              cols: 3,
+                              withHeaderRow: true,
+                            })
+                            .run()
+                        }
+                      >
+                        <FaTableCellsLarge className="h-5 w-5" />
+                      </button>
+                      <button
+                        type="button"
+                        className="px-2"
+                        onClick={() =>
+                          editor.chain().focus().addColumnBefore().run()
+                        }
+                      >
+                        <PiColumnsPlusLeft className="h-6 w-6" />
+                      </button>
+                      <button
+                        type="button"
+                        className="px-2"
+                        onClick={() =>
+                          editor.chain().focus().addColumnAfter().run()
+                        }
+                      >
+                        <PiColumnsPlusRight className="h-6 w-6" />
+                      </button>
+                      <button
+                        type="button"
+                        className="px-2"
+                        onClick={() =>
+                          editor.chain().focus().deleteColumn().run()
+                        }
+                      >
+                        <TbColumnRemove className="h-6 w-6" />
+                      </button>
+                      <button
+                        type="button"
+                        className="px-2"
+                        onClick={() =>
+                          editor.chain().focus().addRowBefore().run()
+                        }
+                      >
+                        <PiRowsPlusTop className="h-6 w-6" />
+                      </button>
+                      <button
+                        type="button"
+                        className="px-2"
+                        onClick={() =>
+                          editor.chain().focus().addRowAfter().run()
+                        }
+                      >
+                        <PiRowsPlusBottom className="h-6 w-6" />
+                      </button>
+                      <button
+                        type="button"
+                        className="px-2"
+                        onClick={() => editor.chain().focus().deleteRow().run()}
+                      >
+                        <TbRowRemove className="h-6 w-6" />
+                      </button>
+                      <button
+                        type="button"
+                        className="px-2"
+                        onClick={() =>
+                          editor.chain().focus().deleteTable().run()
+                        }
+                      >
+                        <TbTableMinus className="h-6 w-6" />
+                      </button>
+                      <button
+                        type="button"
+                        className="px-2"
+                        onClick={() =>
+                          editor.chain().focus().mergeCells().run()
+                        }
+                      >
+                        <AiOutlineMergeCells className="h-6 w-6" />
+                      </button>
+                      <button
+                        type="button"
+                        className="px-2"
+                        onClick={() => editor.chain().focus().splitCell().run()}
+                      >
+                        <AiOutlineSplitCells className="h-6 w-6" />
+                      </button>
+                      <button
+                        type="button"
+                        className="px-2"
+                        onClick={() =>
+                          editor.chain().focus().goToNextCell().run()
+                        }
+                      >
+                        <GrFormNextLink className="h-6 w-6" />
+                      </button>
+                      <button
+                        type="button"
+                        className="px-2"
+                        onClick={() =>
+                          editor.chain().focus().goToPreviousCell().run()
+                        }
+                      >
+                        <GrFormPreviousLink className="h-6 w-6" />
+                      </button>
                     </div>
-                    <ReactQuill
-                      ref={reactQuillRef}
-                      theme="snow"
-                      onChange={handleChange}
-                      modules={modules}
-                      formats={formats}
-                      value={editorHtml}
-                      placeholder="Write something awesome..."
-                    />
-                    <input
-                      type="file"
-                      accept="image/*"
-                      ref={inputOpenImageRef}
-                      style={{ display: "none" }}
-                      onChange={insertImage}
+
+                    {/* Editor Content */}
+                    <EditorContent
+                      className="prose max-w-none border-2 border-gray-300"
+                      editor={editor}
                     />
                   </div>
                 </div>
@@ -605,35 +876,5 @@ const CreatePost = () => {
     </div>
   );
 };
-
-const modules = {
-  toolbar: {
-    container: "#toolbar",
-    handlers: {
-      insertImage: () => {},
-    },
-  },
-};
-
-const formats = [
-  "header",
-  "bold",
-  "italic",
-  "underline",
-  "strike",
-  "image",
-  "link",
-  "code-block",
-  "blockquote",
-  "list",
-  "bullet",
-  "indent",
-  "align",
-  "script",
-  "subscript",
-  "superscript",
-  "check",
-  "clean",
-];
 
 export default CreatePost;

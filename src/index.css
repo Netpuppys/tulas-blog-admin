@@ -19,9 +19,9 @@ html {
 }
 
 .editor-container {
-  @apply p-4 border border-gray-300 rounded-lg outline-none !border-none;
+  @apply border border-gray-300 rounded-lg outline-none border-none;
 }
 
 .tiptap {
-  @apply p-4 border border-gray-300 rounded-lg !border-none focus:border-none ring-transparent ring-0 focus:ring-0 focus:ring-transparent outline-none focus:outline-none;
+  @apply p-4 rounded-lg ring-transparent outline-none caret-purple-600 text-xl;
 }
