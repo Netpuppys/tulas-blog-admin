@@ -23,6 +23,7 @@ import Bold from "@tiptap/extension-bold";
 import BulletList from "@tiptap/extension-bullet-list";
 import Heading from "@tiptap/extension-heading";
 import Image from "@tiptap/extension-image";
+import Link from "@tiptap/extension-link";
 import Italic from "@tiptap/extension-italic";
 import ListItem from "@tiptap/extension-list-item";
 import OrderedList from "@tiptap/extension-ordered-list";
@@ -42,7 +43,7 @@ import React, { ChangeEvent, useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { AiOutlineMergeCells, AiOutlineSplitCells } from "react-icons/ai";
 import { FaBold, FaItalic, FaStrikethrough, FaUnderline } from "react-icons/fa";
-import { FaTableCellsLarge } from "react-icons/fa6";
+import { FaLink, FaLinkSlash, FaTableCellsLarge } from "react-icons/fa6";
 import { GrFormNextLink, GrFormPreviousLink } from "react-icons/gr";
 import { LuLayoutList } from "react-icons/lu";
 import { MdImage } from "react-icons/md";
@@ -52,7 +53,7 @@ import {
   PiRowsPlusBottom,
   PiRowsPlusTop,
 } from "react-icons/pi";
-import { RiH1, RiH2, RiListOrdered2 } from "react-icons/ri";
+import { RiH1, RiH2, RiH3, RiH4, RiListOrdered2 } from "react-icons/ri";
 import { RxQuote } from "react-icons/rx";
 import { TbColumnRemove, TbRowRemove, TbTableMinus } from "react-icons/tb";
 import { useNavigate, useParams } from "react-router-dom";
@@ -83,12 +84,17 @@ const FormSchema = z.object({
 const extensions = [
   StarterKit,
   Paragraph,
-  Heading.configure({ levels: [1, 2] }),
+  Heading,
   Bold,
   Italic,
   Underline,
   Strike,
   Image,
+  Link.configure({
+    openOnClick: false,
+    autolink: true,
+    defaultProtocol: "https",
+  }),
   Blockquote,
   ListItem,
   BulletList,
@@ -212,7 +218,7 @@ const EditPost = () => {
     const tempDiv = document.createElement("div");
     tempDiv.innerHTML = html;
 
-    const headings = tempDiv.querySelectorAll("h1, h2, h3");
+    const headings = tempDiv.querySelectorAll("h1, h2, h3, h4");
 
     // Assign unique IDs to each heading
     headings.forEach((heading, index) => {
@@ -329,8 +335,30 @@ const EditPost = () => {
     }
   }
 
+  const setLink = useCallback(() => {
+    if (!editor) {
+      setIsLoading(true);
+      return null;
+    }
+
+    const previousUrl = editor.getAttributes("link").href;
+    const url = window.prompt("URL", previousUrl);
+
+    if (url === null) {
+      return;
+    }
+
+    if (url === "") {
+      editor.chain().focus().extendMarkRange("link").unsetLink().run();
+
+      return;
+    }
+
+    editor.chain().focus().extendMarkRange("link").setLink({ href: url }).run();
+  }, [editor]);
+
   if (!editor) {
-    // setIsLoading(true);
+    setIsLoading(true);
     return null;
   }
 
@@ -530,6 +558,78 @@ const EditPost = () => {
                         <button
                           type="button"
                           onClick={() =>
+                            editor
+                              .chain()
+                              .focus()
+                              .toggleHeading({ level: 3 })
+                              .run()
+                          }
+                          className={`${
+                            isActive("heading") &&
+                            editor.isActive("heading", { level: 3 })
+                              ? "active bg-purple-500/70 rounded-sm"
+                              : ""
+                          } px-2 py-2`}
+                        >
+                          <RiH3 className="h-6 w-6" />
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() =>
+                            editor
+                              .chain()
+                              .focus()
+                              .toggleHeading({ level: 4 })
+                              .run()
+                          }
+                          className={`${
+                            isActive("heading") &&
+                            editor.isActive("heading", { level: 4 })
+                              ? "active bg-purple-500/70 rounded-sm"
+                              : ""
+                          } px-2 py-2`}
+                        >
+                          <RiH4 className="h-6 w-6" />
+                        </button>
+                        {/* <button
+                          type="button"
+                          onClick={() =>
+                            editor
+                              .chain()
+                              .focus()
+                              .toggleHeading({ level: 5 })
+                              .run()
+                          }
+                          className={`${
+                            isActive("heading") &&
+                            editor.isActive("heading", { level: 5 })
+                              ? "active bg-purple-500/70 rounded-sm"
+                              : ""
+                          } px-2 py-2`}
+                        >
+                          <RiH5 className="h-6 w-6" />
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() =>
+                            editor
+                              .chain()
+                              .focus()
+                              .toggleHeading({ level: 6 })
+                              .run()
+                          }
+                          className={`${
+                            isActive("heading") &&
+                            editor.isActive("heading", { level: 6 })
+                              ? "active bg-purple-500/70 rounded-sm"
+                              : ""
+                          } px-2 py-2`}
+                        >
+                          <RiH6 className="h-6 w-6" />
+                        </button> */}
+                        <button
+                          type="button"
+                          onClick={() =>
                             editor.chain().focus().toggleBulletList().run()
                           }
                           className={`${
@@ -579,6 +679,28 @@ const EditPost = () => {
                         >
                           <MdImage className="mx-2 h-6 w-6" />
                         </label>
+                        {/* url */}
+                        <button
+                          type="button"
+                          onClick={setLink}
+                          className={`${
+                            editor.isActive("link")
+                              ? "active bg-purple-500/70 rounded-sm"
+                              : ""
+                          } px-2 py-2`}
+                        >
+                          <FaLink className="mx-2 h-6 w-6" />
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() =>
+                            editor.chain().focus().unsetLink().run()
+                          }
+                          disabled={!editor.isActive("link")}
+                        >
+                          <FaLinkSlash className="mx-2 h-6 w-6" />
+                        </button>
+                        {/* table */}
                         <button
                           type="button"
                           className="px-2"

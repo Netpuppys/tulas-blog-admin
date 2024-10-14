@@ -31,13 +31,14 @@ const SinglePost = () => {
       const tempDiv = document.createElement("div");
       tempDiv.innerHTML = htmlContent;
 
-      const headings = tempDiv.querySelectorAll("h1, h2, h3");
+      // Select only h2, h3, h4 headings
+      const headings = tempDiv.querySelectorAll("h2, h3, h4");
       const tocList = Array.from(headings).map((heading) => ({
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         //@ts-ignore
         text: heading.innerText,
         id: heading.id,
-        tagName: heading.tagName.toLowerCase(), // Get the tag name (h1, h2, h3)
+        tagName: heading.tagName.toLowerCase(), // Get the tag name (h2, h3, h4)
       }));
 
       setTocItems(tocList);
@@ -45,6 +46,12 @@ const SinglePost = () => {
 
     fetchPost();
   }, [slug]);
+
+  const cleanContent = (content: string) => {
+    if (!content) return "";
+    // Replace empty <p></p> with <br /> tag
+    return content.replace(/<p><\/p>/g, "<br />");
+  };
 
   return (
     <div>
@@ -88,7 +95,7 @@ const SinglePost = () => {
                 <ul className="toc-list">
                   {tocItems.map((item: ILinkType) => (
                     <li key={item.id} className="my-3 flex items-center gap-3">
-                      {item?.tagName === "h1" ? (
+                      {item.tagName === "h2" ? (
                         <GoDash className="text-gray-500" />
                       ) : (
                         ""
@@ -97,12 +104,12 @@ const SinglePost = () => {
                         href={`#${item.id}`}
                         className={`
               ${
-                item.tagName === "h1"
+                item.tagName === "h2"
                   ? "text-xl"
-                  : item.tagName === "h2"
-                  ? "ml-7 pl-6 text-lg border-l-[3px] border-gray-300"
                   : item.tagName === "h3"
-                  ? "ml-7 pl-12 text-base border-l-[3px] border-gray-300"
+                  ? "ml-7 pl-6 text-lg border-l-[3px] border-gray-300"
+                  : item.tagName === "h4"
+                  ? "ml-7 pl-12 text-lg border-l-[3px] border-gray-300"
                   : ""
               } hover:text-red-600 transition duration-200
             `}
@@ -118,7 +125,9 @@ const SinglePost = () => {
             {/* Blog Content */}
             <div
               className="prose prose-red lg:prose-xl"
-              dangerouslySetInnerHTML={{ __html: postData?.content }}
+              dangerouslySetInnerHTML={{
+                __html: cleanContent(postData?.content),
+              }}
             ></div>
           </div>
         )}
