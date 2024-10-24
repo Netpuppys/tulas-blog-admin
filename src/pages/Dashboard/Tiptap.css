@@ -77,3 +77,16 @@
     cursor: ew-resize;
     cursor: col-resize;
 }
+
+#editor_scrollbar::-webkit-scrollbar {
+    background-color: #e5e7eb;
+}
+
+#editor_scrollbar::-webkit-scrollbar-thumb {
+    background-color: #BA81F3;
+    border-radius: 10px;
+}
+
+#editor_scrollbar::-webkit-scrollbar {
+    width: 10px;
+}

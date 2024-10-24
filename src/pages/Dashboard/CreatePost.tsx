@@ -797,7 +797,8 @@ const CreatePost = () => {
 
                     {/* Editor Content */}
                     <EditorContent
-                      className="prose max-w-none border-2 border-gray-300"
+                    id="editor_scrollbar"
+                      className="max-h-[36rem] overflow-y-scroll prose max-w-none border-2 border-gray-300"
                       editor={editor}
                     />
                   </div>
